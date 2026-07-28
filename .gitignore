@@ -1,0 +1,33 @@
+# Virtual Environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment variables
+.env
+
+# OS files
+.DS_Store
+.ipynb_checkpoints/
+
+# Generated outputs
+test_map.png
+trace_write.py
+verify_tools.py
+
+# Raw spatial datasets (to keep the repo clean and avoid size limits)
+*.csv
+*.xlsx
+*.kmz
+*.png
+*.txt
+*.pptx
+Contours_10m.*
+!requirements.txt
+
+# Old cloned repo
+arctic-geoagent/
