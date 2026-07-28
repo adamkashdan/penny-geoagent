@@ -1,88 +1,86 @@
 # Penny Ice Cap GeoAgent 2017
 
-Гео-агент (AI-ассистент) на базе Gemini API для анализа радарных измерений толщины льда и подледного рельефа ледникового купола Penny (Baffin Island, Nunavut, Canada), собранных в 2017 году в рамках миссии NASA Operation IceBridge (прибор MCoRDS L2).
+An AI-powered geospatial assistant built on the Gemini API to analyze radar measurements of ice thickness and subglacial bedrock topography for the Penny Ice Cap (Baffin Island, Nunavut, Canada). The dataset consists of real measurements collected on April 28, 2017, during the NASA Operation IceBridge survey using the Multichannel Coherent Radar Depth Sounder (MCoRDS L2).
 
-Проект адаптирует концепцию семантического слоя и ГИС-инструментов из [arctic-geoagent](https://github.com/adamkashdan/arctic-geoagent) для работы с реальными точечными измерениями профилей ледника (файл `IRMCR2_20170428_03_raw_data.csv`, более 110 000 точек).
-
----
-
-## Архитектура проекта
-
-```
-Пользовательский вопрос (естественный язык)
-       │
-       ▼
-Интерфейс FastAPI /ask (src/main.py)
-       │
-       ▼
-Агентный цикл (src/agent.py) <──> Gemini API (Function Calling)
-       │
-       ▼
-ГИС-инструменты (src/tools.py) <──> Анализ CSV через Pandas / Matplotlib
-       │
-       ▼
-Семантический слой (semantic_layer.yaml) <── Описание переменных для LLM
-```
+This project adapts the semantic layer and tool-use architecture of [arctic-geoagent](https://github.com/adamkashdan/arctic-geoagent) to work directly with point-based flight track CSV data (over 110,000 measurements) rather than raster GeoTIFF files.
 
 ---
 
-## Как запустить проект самостоятельно
+## Architecture
 
-### 1. Активация виртуального окружения
-Виртуальное окружение Python со всеми необходимыми ГИС-библиотеками (`pandas`, `geopandas`, `shapely`, `rasterio`, `matplotlib`, `google-genai`, `fastapi`, `uvicorn`) уже настроено в папке `venv`. 
+```
+User question (natural language)
+       │
+       ▼
+FastAPI interface /ask endpoint (src/main.py)
+       │
+       ▼
+Agent loop (src/agent.py) <──> Gemini API (Function Calling)
+       │
+       ▼
+GIS tools (src/tools.py) <──> Pandas / Matplotlib analysis over CSV
+       │
+       ▼
+Semantic layer (semantic_layer.yaml) <── Describes dataset schema to the LLM
+```
 
-Для его активации выполните:
+---
+
+## How to Run the Project
+
+### 1. Activate the Virtual Environment
+A virtual environment containing all required GIS and web libraries (`pandas`, `geopandas`, `shapely`, `rasterio`, `matplotlib`, `google-genai`, `fastapi`, `uvicorn`) is already set up in the `venv` directory.
+
+Activate it by running:
 ```bash
 source venv/bin/activate
 ```
 
-*(Если вы хотите переустановить зависимости с нуля, выполните `pip install -r requirements.txt`)*
+*(To reinstall dependencies from scratch, run `pip install -r requirements.txt`)*
 
-### 2. Настройка API-ключа Gemini
-Для работы агентного цикла (Function Calling) требуется ключ API от Google AI Studio. Задайте его в переменных окружения:
+### 2. Set Up Your Gemini API Key
+The agent loop uses Google's Gemini API for tool-use reasoning. Set your API key as an environment variable:
 ```bash
-export GEMINI_API_KEY="ваш-ключ-api-здесь"
+export GEMINI_API_KEY="your-api-key-here"
 ```
-или создайте файл `.env` в корневой папке проекта со следующим содержимым:
+Or create a `.env` file in the root of the project:
 ```env
-GEMINI_API_KEY="ваш-ключ-api-здесь"
+GEMINI_API_KEY="your-api-key-here"
 ```
 
-### 3. Проверка инструментов ГИС (без вызова LLM)
-Вы можете запустить быстрый тест инструментов (поиск точек, зональная статистика, расчет корреляции и отрисовка тестовой карты):
+### 3. Verify GIS Tools (Direct Python execution)
+You can test the GIS query logic, stats computation, correlation coefficient, and map generation directly without invoking the LLM:
 ```bash
 python verify_tools.py
 ```
-После этого в корневой папке появится тестовая карта `test_map.png`.
+This will generate a flight track map named `test_map.png` in the root folder.
 
-### 4. Запуск агента в режиме командной строки (CLI)
-Вы можете задать вопрос агенту прямо из консоли:
+### 4. Run the Agent in CLI Mode
+You can ask the agent questions directly from the command line:
 ```bash
-python src/agent.py "Какая средняя толщина льда на Penny Ice Cap в bounding box [-66.0, 67.0, -65.5, 67.5]?"
+python src/agent.py "What is the average ice thickness on the Penny Ice Cap in the bounding box [-66.0, 67.0, -65.5, 67.5]?"
 ```
 
-### 5. Запуск веб-сервиса FastAPI
-Запустите сервер разработки Uvicorn:
+### 5. Start the FastAPI Service
+Launch the development server:
 ```bash
 uvicorn src.main:app --reload --port 8000
 ```
+Open your browser and navigate to `http://localhost:8000/docs` to view the interactive API documentation.
 
-Сервер будет доступен по адресу `http://localhost:8000`. Вы можете открыть интерактивную документацию API по адресу `http://localhost:8000/docs`.
-
-### 6. Запросы к API через curl
-Отправьте POST-запрос с вопросом к гео-агенту:
+### 6. Query the API using curl
+Send a POST request containing a question to the agent:
 ```bash
 curl -X POST http://localhost:8000/ask \
   -H "Content-Type: application/json" \
-  -d '{"question": "Какая средняя высота поверхности ледника и толщина льда в bounding box [-66.0, 67.0, -65.5, 67.5]?"}'
+  -d '{"question": "Calculate the average surface elevation and ice thickness in the bounding box [-66.0, 67.0, -65.5, 67.5]."}'
 ```
-
-Сервер вернет текстовый ответ агента (`answer`) и base64-строку сгенерированной карты (`image_base64`), если агент решит построить карту для ответа.
+The API returns the textual `answer` and a base64-encoded PNG map (`image_base64`) if the agent generated a map for its answer.
 
 ---
 
-## Пример вопросов, которые можно задать агенту:
-- *"Какая толщина льда и высота ложа ледника в координатах 67.0145, -64.4217?"*
-- *"Покажи карту толщины льда для всего ледникового купола Penny."*
-- *"Посчитай зональную статистику высоты поверхности в границах от -66.5 до -66.0 долготы и от 67.0 до 67.2 широты."*
-- *"Как соотносятся между собой высота поверхности и толщина льда в центральной части купола?"*
+## Example Questions to Ask:
+- *"What is the ice thickness and bedrock elevation at the coordinates 67.0145 N, -64.4217 W?"*
+- *"Show me a map of the ice thickness for the entire Penny Ice Cap survey area."*
+- *"Calculate the zonal statistics of the surface elevation in the bounding box [-66.5, 67.0, -66.0, 67.2]."*
+- *"Is there a correlation between surface elevation and ice thickness in the central part of the ice cap?"*
