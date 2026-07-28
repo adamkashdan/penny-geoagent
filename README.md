@@ -105,3 +105,13 @@ This generates two plots in the root directory:
 - *"Show me a map of the ice thickness for the entire Penny Ice Cap survey area."*
 - *"Calculate the zonal statistics of the surface elevation in the bounding box [-66.5, 67.0, -66.0, 67.2]."*
 - *"Is there a correlation between surface elevation and ice thickness in the central part of the ice cap?"*
+
+---
+
+## License & Copyright
+
+Copyright (c) 2026 Adam Kashdan. All rights reserved.
+
+This repository contains draft source code associated with an upcoming scientific publication. The code is provided solely for reference and academic peer-review purposes. 
+
+See the [LICENSE](LICENSE) file for full copyright terms and restrictions.
