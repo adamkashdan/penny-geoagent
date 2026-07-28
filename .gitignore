@@ -24,6 +24,8 @@ github_push.py
 *.csv
 *.xlsx
 *.kmz
+*.pdf
+*.docx
 *.png
 *.txt
 *.pptx
