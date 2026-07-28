@@ -79,6 +79,27 @@ The API returns the textual `answer` and a base64-encoded PNG map (`image_base64
 
 ---
 
+## Pleistocene Ice Layer (PIL) Modeling
+
+The project includes a physical glaciological modeling module for estimating the basal Pleistocene Ice Layer (PIL) thickness and its impact on glacier velocity:
+- **PIL Thickness Estimation**: Evaluates the thickness of the basal soft ice layer along flight tracks: $H_p = \min(0.12 \times H, 80\text{ m})$ for deep zones ($H > 150\text{ m}$).
+- **Ice Flow Modeling**: Solves the vertical velocity profile $u(z)$ under the Shallow Ice Approximation (SIA) using Glen's flow law. It incorporates a fluidity enhancement factor ($E = 3.5$) for the soft basal Pleistocene ice, demonstrating the concentration of shear deformation near the bed.
+
+### Model Outputs
+Run the modeling module directly using:
+```bash
+python src/pil_modeling.py
+```
+This generates two plots in the root directory:
+1. **PIL Distribution Map** (`pil_distribution_map.png`): Spatial distribution of the estimated basal layer along the survey track.
+2. **Basal Shear Velocity Profile** (`pil_velocity_profile.png`): Visualizes the normalized velocity profile $u(z)$ comparing Holocene-only ice ($E=1$) and ice with a soft basal PIL ($E=3.5$).
+
+| PIL Spatial Distribution | Basal Shear Velocity Profile |
+|:---:|:---:|
+| ![PIL Distribution Map](pil_distribution_map.png) | ![Basal Shear Profile](pil_velocity_profile.png) |
+
+---
+
 ## Example Questions to Ask:
 - *"What is the ice thickness and bedrock elevation at the coordinates 67.0145 N, -64.4217 W?"*
 - *"Show me a map of the ice thickness for the entire Penny Ice Cap survey area."*

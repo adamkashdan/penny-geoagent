@@ -38,3 +38,7 @@ arctic-geoagent/
 
 # New Accumulation Radar folder
 IceBridge Accumulation Radar L1B Geolocated Radar Echo Strength Profiles, Version 2 (IRACC1B) 2017/
+
+# Allowed images for README rendering
+!pil_distribution_map.png
+!pil_velocity_profile.png
