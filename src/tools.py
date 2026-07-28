@@ -57,6 +57,11 @@ def _load_data() -> pd.DataFrame:
         axis=1
     )
 
+    # Pleistocene Ice Layer (PIL) Thickness = min(0.12 * Ice Thickness, 80.0) if Ice Thickness > 150 else 0.0
+    df["pleistocene_ice_thickness"] = df["ice_thickness"].apply(
+        lambda H: min(0.12 * H, 80.0) if H > 150.0 and not np.isnan(H) else 0.0
+    )
+
     _DF_CACHE = df
     return df
 
@@ -103,6 +108,7 @@ def query_point_data(lat: float, lon: float) -> dict:
         "ice_thickness": float(row["ice_thickness"]) if not np.isnan(row["ice_thickness"]) else "No Data",
         "surface_elevation": float(row["surface_elevation"]) if not np.isnan(row["surface_elevation"]) else "No Data",
         "bedrock_elevation": float(row["bedrock_elevation"]) if not np.isnan(row["bedrock_elevation"]) else "No Data",
+        "pleistocene_ice_thickness": float(row["pleistocene_ice_thickness"]) if not np.isnan(row["pleistocene_ice_thickness"]) else "No Data",
         "seconds_of_day": float(row["UTCTIMESOD"]),
         "frame_id": int(row["FRAME"]),
         "quality_flag": int(row["QUALITY"]) if not np.isnan(row["QUALITY"]) else "Unknown",
@@ -173,6 +179,8 @@ def generate_map_image(dataset: str, bbox: Optional[list] = None) -> dict:
         cmap = "Blues"
     elif dataset == "surface_elevation":
         cmap = "terrain"
+    elif dataset == "pleistocene_ice_thickness":
+        cmap = "Purples"
     else:
         cmap = "BrBG"  # Brown-Green for bedrock
 

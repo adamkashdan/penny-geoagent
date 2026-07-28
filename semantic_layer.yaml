@@ -34,6 +34,15 @@ datasets:
       Useful for subglacial topography analysis and determining the base structure of the ice cap. Valid range: -200 to 2200 meters.
     value_range: [-200, 2200]
 
+  pleistocene_ice_thickness:
+    label: "Pleistocene Ice Layer (PIL) Thickness"
+    unit: "meters"
+    description: >
+      Estimated thickness of the basal Pleistocene ice layer (ancient soft ice).
+      Calculated using a standard physical glaciological model where PIL exists in deep zones (H > 150m)
+      and is capped at a maximum thickness of 80 meters. Valid range: 0 to 80 meters.
+    value_range: [0, 80]
+
 region:
   name: "Penny Ice Cap (Baffin Island, Nunavut, Canada)"
   bbox: [-67.80, 66.48, -63.56, 67.83]  # [west, south, east, north] -- matches dataset coordinate extent
