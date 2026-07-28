@@ -18,6 +18,7 @@ __pycache__/
 test_map.png
 trace_write.py
 verify_tools.py
+github_push.py
 
 # Raw spatial datasets (to keep the repo clean and avoid size limits)
 *.csv
