@@ -12,7 +12,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 BASE_DIR = os.path.join(os.path.dirname(__file__), "..")
-CSV_PATH = os.path.join(BASE_DIR, "IRMCR2_20170428_03_raw_data.csv")
+CSV_PATH = os.path.join(BASE_DIR, "data", "IRMCR2_20170428_03_raw_data.csv")
 
 
 def load_data() -> pd.DataFrame:

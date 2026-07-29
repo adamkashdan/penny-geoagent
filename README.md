@@ -26,19 +26,45 @@ Semantic layer (semantic_layer.yaml) <── Describes dataset schema to the LLM
 
 ---
 
-## How to Run the Project
+## Data Setup
 
-### 1. Activate the Virtual Environment
-A virtual environment containing all required GIS and web libraries (`pandas`, `geopandas`, `shapely`, `rasterio`, `matplotlib`, `google-genai`, `fastapi`, `uvicorn`) is already set up in the `venv` directory.
+Raw scientific datasets are **not included** in this repository due to file size limits and NASA data distribution policies. You will need to obtain the datasets and place them under the `data/` directory.
 
-Activate it by running:
+### 1. Download Datasets from NSIDC
+Download the datasets for April 28, 2017 (flight line `IRMCR2_20170428_03`):
+*   **MCoRDS L2 Ice Thickness (`IRMCR2`)**: Download the raw flight line data from the [NSIDC MCoRDS L2 Landing Page](https://nsidc.org/data/irmcr2).
+*   **Accumulation Radar L1B (`IRACC1B`)**: Download the radar profiles from the [NSIDC Accumulation Radar L1B Landing Page](https://nsidc.org/data/iracc1b).
+
+### 2. Place Data in Directory Structure
+Create a `data/` folder in the project root and place the files as follows:
+```
+penny-geoagent/
+├── data/
+│   ├── IRMCR2_20170428_03_raw_data.csv
+│   └── IceBridge Accumulation Radar L1B Geolocated Radar Echo Strength Profiles, Version 2 (IRACC1B) 2017/
+│       ├── 001_28166479/
+│       └── ... (other 82 granules)
+```
+*(Note: A `.gitkeep` file is provided in `data/` to preserve the folder structure in Git. The actual dataset files are ignored and will not be committed).*
+
+---
+
+## Installation & Setup
+
+### 1. Create and Activate the Virtual Environment
+A virtual environment ensures clean and isolated dependency installation. Create and activate it by running:
 ```bash
+python -m venv venv
 source venv/bin/activate
 ```
 
-*(To reinstall dependencies from scratch, run `pip install -r requirements.txt`)*
+### 2. Install Dependencies
+Install all required GIS and web packages (`pandas`, `geopandas`, `shapely`, `rasterio`, `matplotlib`, `google-genai`, `fastapi`, `uvicorn`):
+```bash
+pip install -r requirements.txt
+```
 
-### 2. Set Up Your Gemini API Key
+### 3. Set Up Your Gemini API Key
 The agent loop uses Google's Gemini API for tool-use reasoning. Set your API key as an environment variable:
 ```bash
 export GEMINI_API_KEY="your-api-key-here"
@@ -48,27 +74,27 @@ Or create a `.env` file in the root of the project:
 GEMINI_API_KEY="your-api-key-here"
 ```
 
-### 3. Verify GIS Tools (Direct Python execution)
+### 4. Verify GIS Tools (Direct Python execution)
 You can test the GIS query logic, stats computation, correlation coefficient, and map generation directly without invoking the LLM:
 ```bash
 python verify_tools.py
 ```
 This will generate a flight track map named `test_map.png` in the root folder.
 
-### 4. Run the Agent in CLI Mode
+### 5. Run the Agent in CLI Mode
 You can ask the agent questions directly from the command line:
 ```bash
 python src/agent.py "What is the average ice thickness on the Penny Ice Cap in the bounding box [-66.0, 67.0, -65.5, 67.5]?"
 ```
 
-### 5. Start the FastAPI Service
+### 6. Start the FastAPI Service
 Launch the development server:
 ```bash
 uvicorn src.main:app --reload --port 8000
 ```
 Open your browser and navigate to `http://localhost:8000/docs` to view the interactive API documentation.
 
-### 6. Query the API using curl
+### 7. Query the API using curl
 Send a POST request containing a question to the agent:
 ```bash
 curl -X POST http://localhost:8000/ask \

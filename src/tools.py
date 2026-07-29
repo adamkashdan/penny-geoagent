@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 from typing import Optional
 
 BASE_DIR = os.path.join(os.path.dirname(__file__), "..")
-CSV_PATH = os.path.join(BASE_DIR, "IRMCR2_20170428_03_raw_data.csv")
+CSV_PATH = os.path.join(BASE_DIR, "data", "IRMCR2_20170428_03_raw_data.csv")
 
 with open(os.path.join(BASE_DIR, "semantic_layer.yaml")) as f:
     SEMANTIC_LAYER = yaml.safe_load(f)

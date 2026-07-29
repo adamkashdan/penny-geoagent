@@ -22,22 +22,11 @@ verify_tools.py
 github_push.py
 
 # Raw spatial datasets (to keep the repo clean and avoid size limits)
-*.csv
-*.xlsx
-*.kmz
-*.pdf
-*.docx
-*.png
-*.txt
-*.pptx
-Contours_10m.*
-!requirements.txt
+data/*
+!data/.gitkeep
 
 # Old cloned repo
 arctic-geoagent/
-
-# New Accumulation Radar folder
-IceBridge Accumulation Radar L1B Geolocated Radar Echo Strength Profiles, Version 2 (IRACC1B) 2017/
 
 # Allowed images for README rendering
 !pil_distribution_map.png
