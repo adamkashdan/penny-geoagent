@@ -27,6 +27,7 @@ glacier_dem_change_raster.png
 historical_glacier_trends.png
 historical_elevation_change_map.png
 historical_thickness_change_map.png
+icesat2_12year_trend.png
 dem_analysis_summary.txt
 trace_write.py
 verify_tools.py
@@ -50,4 +51,6 @@ arctic-geoagent/
 !historical_glacier_trends.png
 !historical_elevation_change_map.png
 !historical_thickness_change_map.png
+!icesat2_12year_trend.png
+
 

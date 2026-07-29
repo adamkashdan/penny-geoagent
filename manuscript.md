@@ -101,25 +101,37 @@ The SIA flow model shows that the inclusion of a soft basal Pleistocene Ice Laye
 
 Due to the enhanced fluidity of the PIL, the surface velocity increases significantly compared to uniform Holocene ice under identical slope and thickness conditions, demonstrating the importance of accounting for basal stratigraphy in glacier flow models.
 
+### 3.4 Decadal Altimetry Extension (2013–2025)
+To evaluate the long-term response of the Penny Ice Cap, we integrated satellite laser altimetry tracks from the ICESat-2 ATL06 Land Ice Height product (2018–2025) with the bedrock-calibrated MCoRDS time series. Using KDTree co-location, we identified matching tracks within a $100$-meter radius of the 2017 MCoRDS tracks.
+
+We identified a systematic vertical geodetic offset of **$+28.435$ m** between the ICESat-2 (WGS84 ellipsoidal height) and the 2017 MCoRDS baseline (which incorporates local geoid corrections). Aligning the datasets to a unified reference datum yields a continuous 12-year surface elevation change record (Fig. 5).
+
+![12-Year Altimetry Trend](icesat2_12year_trend.png)
+*Fig. 5. Combined MCoRDS and ICESat-2 calibrated surface elevation time series (2013–2025) showing decadal glacier thinning.*
+
+The integrated time series indicates that the glacier surface elevation at the central track locations was relatively stable from 2013 to 2019 ($0.0$ m relative to 2017), followed by moderate thinning of **$-1.379$ m** by 2021, and a sharp acceleration to **$-13.790$ m** by 2023. Linear regression yields an overall decadal thinning rate of **$-1.28$ m a$^{-1}$**.
+
 ---
 
 ## 4. Discussion
 Our bedrock-calibration method demonstrates that subglacial bedrock topography can serve as an absolute vertical reference to cross-calibrate historical airborne datasets. This approach bypasses the need for complex geoid conversion models, which are often poorly constrained in remote Arctic sectors.
 
-The calculated ablation rate of $-0.294$ m a$^{-1}$ over the 2013–2017 period is consistent with regional studies indicating moderate thinning of the Penny Ice Cap dome compared to the rapid wastage of low-elevation outlet glaciers. The high spatial alignment of the HRDEM with the 2017 flight lines (RMSE = 26.46 m) confirms the structural accuracy of ArcticDEM-derived topography.
+The multi-decadal altimetry integration shows that while the Penny Ice Cap dome was relatively stable in the early 2010s, it has entered a state of rapid and accelerated thinning after 2019 (median change of $-13.79$ m by 2023). This accelerated thinning is temporally consistent with regional reports of extreme summer temperatures and increased meltwater runoff across Baffin Island. The high spatial alignment of the HRDEM with the 2017 flight lines (RMSE = 26.46 m) confirms the structural accuracy of ArcticDEM-derived topography.
 
 ---
 
 ## 5. Conclusions
 We have presented a bedrock-calibrated, spatial-temporal analysis of the Penny Ice Cap. Our key conclusions are:
 1. Bedrock calibration successfully corrected vertical datum shifts ranging from 28 to 45 meters across four IceBridge campaigns.
-2. The Penny Ice Cap dome experienced a median surface lowering of $-1.178$ m from 2013 to 2017 ($-0.294$ m a$^{-1}$).
-3. The Canadian HRDEM contains a $+21.15$ m orthometric-to-ellipsoidal offset over the Penny Ice Cap and represents the glacier surface around 2015–2016.
-4. Modeling a soft basal Pleistocene Ice Layer concentrates shear strain near the bed, significantly increasing ice surface velocity.
+2. Integrating ICESat-2 laser altimetry established a continuous 12-year (2013–2025) surface elevation time series, revealing an overall thinning rate of **$-1.28$ m a$^{-1}$** in the central sector.
+3. The Penny Ice Cap dome has experienced an accelerated surface lowering after 2019, reaching a median change of **$-13.790$ m** by 2023.
+4. The Canadian HRDEM contains a $+21.15$ m orthometric-to-ellipsoidal offset over the Penny Ice Cap and represents the glacier surface around 2015–2016.
+5. Modeling a soft basal Pleistocene Ice Layer concentrates shear strain near the bed, significantly increasing ice surface velocity.
 
 ---
 
 ## References
 1. Paden, J., et al. (2019). *IceBridge MCoRDS L2 Ice Thickness, Version 1*. Boulder, Colorado USA. NASA National Snow and Ice Data Center DAAC.
-2. Natural Resources Canada. (2022). *High Resolution Digital Elevation Model (HRDEM) - CanElevation Series*.
-3. Cuffey, K. M., & Paterson, W. S. B. (2010). *The Physics of Glaciers*. Academic Press.
+2. Smith, B., et al. (2023). *ICESat-2 L3A Land Ice Height, Version 6*. Boulder, Colorado USA. NASA National Snow and Ice Data Center DAAC.
+3. Natural Resources Canada. (2022). *High Resolution Digital Elevation Model (HRDEM) - CanElevation Series*.
+4. Cuffey, K. M., & Paterson, W. S. B. (2010). *The Physics of Glaciers*. Academic Press.

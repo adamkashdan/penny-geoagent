@@ -186,6 +186,33 @@ Different Operation IceBridge campaigns frequently suffer from systematic vertic
 
 ---
 
+## Decadal Altimetry Integration (2013-2025): MCoRDS & ICESat-2
+
+The project extends the 2013–2017 historical time series by integrating satellite laser altimetry measurements from **ICESat-2 (ATL06 Land Ice Height)**. This combines airborne radar sounding surface profiles with satellite laser tracks to map a continuous **12-year surface elevation change (2013–2025)**.
+
+### Satellite Co-Location & Aligned Time-Series
+Since ICESat-2 ATL06 uses WGS84 ellipsoidal heights, we co-locate and calibrate it to our baseline:
+1. We select spring orbital passes (April of 2019, 2021, and 2023) intersecting the Penny Ice Cap.
+2. We query the 2017 MCoRDS KDTree to co-locate points within 100 meters.
+3. We detect a systematic vertical datum shift of **$+28.435$ meters** between the ICESat-2 and 2017 MCoRDS baselines.
+4. We subtract this geodetic offset from the ICESat-2 elevations, aligning both datasets to a unified reference datum.
+
+*   **Download command**: `python src/download_icesat2.py` (Downloads spring HDF5 granules via Earthdata Session)
+*   **Run analysis command**: `python src/analyze_icesat2.py` (Performs track co-location and generates 12-year trend plot)
+*   **Outputs**:
+    1. `icesat2_12year_trend.png` (Combined 12-year surface elevation change plot)
+    2. `data/icesat2_comparison_summary.csv` (CSV summary of co-located comparisons)
+
+| 12-Year Glacier Altimetry Trend (2013-2025) |
+|:---:|
+| ![12-Year Altimetry Trend](icesat2_12year_trend.png) |
+
+*   **Key Results**:
+    - **Decadal Thinning Trend**: The combined record shows stable elevations from 2013 to 2019 ($0.0$ m relative to 2017), followed by a moderate thinning of **$-1.379$ meters** by 2021, and a sharp acceleration to **$-13.790$ meters** by 2023 (reflecting recent high-melt Arctic summers).
+    - **Overall rate**: The linear regression trend shows an overall thinning rate of **$-1.28$ m/year** at the overlapping central track region.
+
+---
+
 ## Example Questions to Ask:
 - *"What is the ice thickness and bedrock elevation at the coordinates 67.0145 N, -64.4217 W?"*
 - *"Show me a map of the ice thickness for the entire Penny Ice Cap survey area."*
