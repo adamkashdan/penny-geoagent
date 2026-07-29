@@ -1,4 +1,4 @@
-# Penny Ice Cap GeoAgent 2017
+# Penny Ice Cap GeoAgent 2013-2017
 
 An AI-powered geospatial assistant built on the Gemini API to analyze radar measurements of ice thickness and subglacial bedrock topography for the Penny Ice Cap (Baffin Island, Nunavut, Canada). The dataset consists of real measurements collected on April 28, 2017, during the NASA Operation IceBridge survey using the Multichannel Coherent Radar Depth Sounder (MCoRDS L2).
 
