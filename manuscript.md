@@ -1,7 +1,7 @@
 # Spatial-Temporal Dynamics and Basal Ice Properties of the Penny Ice Cap, Baffin Island: Insights from Bedrock-Calibrated Airborne Radar Sounding (2013–2017) and Basal Shear SIA Modeling
 
 **Adam Kashdan**$^1$, **Hazen Russell**$^2$  
-$^1$TAV College, Montréal, Québec, Canada  
+$^1$ TAV College, Montréal, Québec, Canada  
 $^2$Geological Survey of Canada, Natural Resources Canada  
 
 ---
