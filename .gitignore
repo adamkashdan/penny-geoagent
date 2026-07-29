@@ -17,6 +17,8 @@ __pycache__/
 # Generated outputs
 test_map.png
 test_pil_map.png
+test_s2_ndsi.png
+test_s2_rgb.png
 trace_write.py
 verify_tools.py
 github_push.py

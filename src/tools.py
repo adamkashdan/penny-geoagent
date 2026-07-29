@@ -257,6 +257,78 @@ def _describe_correlation(r: float, var_a: str, var_b: str) -> str:
         return f"There is a {strength} {direction} correlation (r = {r:.2f}) between {var_a} and {var_b}."
 
 
+# --- Sentinel-2 Satellite Image Mapping and Processing Tools -------------
+
+DATE_TO_S2_FOLDER = {
+    "2017-08-03": "S2A_MSIL1C_20170803T161901_N0205_R040_T19WFQ_20170803T161902.SAFE",
+    "2017-09-05": "S2A_MSIL1C_20170905T162901_N0205_R083_T19WEQ_20200810T021237.SAFE",
+    "2022-08-22": "S2B_MSIL1C_20220822T161829_N0400_R040_T19WFQ_20220822T182100.SAFE",
+    "2022-08-30": "S2A_MSIL2A_20220830T162851_N0400_R083_T19WEQ_20220831T003755.SAFE",
+    "2022-08-31": "S2A_MSIL1C_20220831T155831_N0400_R097_T19WFQ_20220831T210803.SAFE"
+}
+
+
+def generate_satellite_ndsi_map(date_str: str, bbox: Optional[list] = None) -> dict:
+    """Generate a colored map of Normalized Difference Snow Index (NDSI) for a specific date, optionally cropped to a bbox. Returns base64 PNG."""
+    from s2_processing import process_ndsi
+    import base64
+    import io
+
+    if date_str not in DATE_TO_S2_FOLDER:
+        return {"error": f"Available Sentinel-2 dates are: {list(DATE_TO_S2_FOLDER.keys())}."}
+
+    folder = DATE_TO_S2_FOLDER[date_str]
+    res = process_ndsi(folder, bbox)
+    if isinstance(res, dict) and "error" in res:
+        return res
+
+    ndsi, actual_bbox = res
+
+    fig, ax = plt.subplots(figsize=(6, 5))
+    im = ax.imshow(ndsi, cmap="coolwarm", extent=[actual_bbox[0], actual_bbox[2], actual_bbox[1], actual_bbox[3]], vmin=-0.2, vmax=1.0)
+    ax.set_title(f"Sentinel-2 NDSI (Snow/Ice Index)\nPenny Ice Cap {date_str}", fontsize=10, fontweight="bold")
+    ax.set_xlabel("Longitude (deg W)", fontsize=8)
+    ax.set_ylabel("Latitude (deg N)", fontsize=8)
+    fig.colorbar(im, ax=ax, label="NDSI Value")
+
+    buf = io.BytesIO()
+    fig.savefig(buf, format="png", dpi=120, bbox_inches="tight")
+    plt.close(fig)
+    buf.seek(0)
+    b64_str = base64.b64encode(buf.read()).decode("utf-8")
+    return {"date": date_str, "bbox": actual_bbox, "image_base64": b64_str}
+
+
+def generate_satellite_rgb_map(date_str: str, bbox: Optional[list] = None) -> dict:
+    """Generate a True Color RGB map for a specific date, optionally cropped to a bbox. Returns base64 PNG."""
+    from s2_processing import process_rgb
+    import base64
+    import io
+
+    if date_str not in DATE_TO_S2_FOLDER:
+        return {"error": f"Available Sentinel-2 dates are: {list(DATE_TO_S2_FOLDER.keys())}."}
+
+    folder = DATE_TO_S2_FOLDER[date_str]
+    res = process_rgb(folder, bbox)
+    if isinstance(res, dict) and "error" in res:
+        return res
+
+    rgb, actual_bbox = res
+
+    fig, ax = plt.subplots(figsize=(6, 5))
+    ax.imshow(rgb, extent=[actual_bbox[0], actual_bbox[2], actual_bbox[1], actual_bbox[3]])
+    ax.set_title(f"Sentinel-2 True Color RGB\nPenny Ice Cap {date_str}", fontsize=10, fontweight="bold")
+    ax.set_xlabel("Longitude (deg W)", fontsize=8)
+    ax.set_ylabel("Latitude (deg N)", fontsize=8)
+
+    buf = io.BytesIO()
+    fig.savefig(buf, format="png", dpi=120, bbox_inches="tight")
+    plt.close(fig)
+    buf.seek(0)
+    b64_str = base64.b64encode(buf.read()).decode("utf-8")
+    return {"date": date_str, "bbox": actual_bbox, "image_base64": b64_str}
+
+
 # --- Tool schema definitions for Gemini Function Calling -----------------
 
 TOOL_DEFINITIONS = [
@@ -283,7 +355,7 @@ TOOL_DEFINITIONS = [
         "input_schema": {
             "type": "object",
             "properties": {
-                "dataset": {"type": "string", "description": "Variable name, e.g. 'ice_thickness', 'surface_elevation', 'bedrock_elevation'"},
+                "dataset": {"type": "string", "description": "Variable name, e.g. 'ice_thickness', 'surface_elevation', 'bedrock_elevation', 'pleistocene_ice_thickness'"},
                 "bbox": {"type": "array", "items": {"type": "number"}, "minItems": 4, "maxItems": 4, "description": "[west, south, east, north] coordinates"},
             },
             "required": ["dataset", "bbox"],
@@ -295,7 +367,7 @@ TOOL_DEFINITIONS = [
         "input_schema": {
             "type": "object",
             "properties": {
-                "dataset": {"type": "string", "description": "Variable name, e.g. 'ice_thickness', 'surface_elevation', 'bedrock_elevation'"},
+                "dataset": {"type": "string", "description": "Variable name, e.g. 'ice_thickness', 'surface_elevation', 'bedrock_elevation', 'pleistocene_ice_thickness'"},
                 "bbox": {"type": "array", "items": {"type": "number"}, "minItems": 4, "maxItems": 4, "description": "Optional bounding box [west, south, east, north] to zoom in"},
             },
             "required": ["dataset"],
@@ -314,6 +386,30 @@ TOOL_DEFINITIONS = [
             "required": ["dataset_a", "dataset_b", "bbox"],
         },
     },
+    {
+        "name": "generate_satellite_ndsi_map",
+        "description": "Generate a Normalized Difference Snow Index (NDSI) map for a specific Sentinel-2 acquisition date. High NDSI values (> 0.4) indicate snow/ice. Returns base64 PNG.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "date_str": {"type": "string", "description": "Sentinel-2 date string, e.g. '2017-08-03', '2017-09-05', '2022-08-22', '2022-08-30', '2022-08-31'"},
+                "bbox": {"type": "array", "items": {"type": "number"}, "minItems": 4, "maxItems": 4, "description": "Optional bounding box [west, south, east, north]"},
+            },
+            "required": ["date_str"],
+        },
+    },
+    {
+        "name": "generate_satellite_rgb_map",
+        "description": "Generate a True Color RGB map for a specific Sentinel-2 acquisition date. Returns base64 PNG.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "date_str": {"type": "string", "description": "Sentinel-2 date string, e.g. '2017-08-03', '2017-09-05', '2022-08-22', '2022-08-30', '2022-08-31'"},
+                "bbox": {"type": "array", "items": {"type": "number"}, "minItems": 4, "maxItems": 4, "description": "Optional bounding box [west, south, east, north]"},
+            },
+            "required": ["date_str"],
+        },
+    },
 ]
 
 TOOL_FUNCTIONS = {
@@ -322,4 +418,6 @@ TOOL_FUNCTIONS = {
     "compute_zonal_statistics": compute_zonal_statistics,
     "generate_map_image": generate_map_image,
     "compare_variables": compare_variables,
+    "generate_satellite_ndsi_map": generate_satellite_ndsi_map,
+    "generate_satellite_rgb_map": generate_satellite_rgb_map,
 }
