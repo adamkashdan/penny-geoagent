@@ -126,26 +126,34 @@ This generates two plots in the root directory:
 
 ---
 
-## Digital Elevation Model (DEM) 2022 Analysis & Elevation Change
+## Digital Elevation Model (DEM) Analysis & Elevation Change
 
-The repository includes a script to compare the 2022 Digital Elevation Model (DEM) of the Penny Ice Cap with the 2017 MCoRDS L2 radar surface elevations:
-- **Glacier Boundary Overlay**: Overlays the glacier boundary outline from the Shapefile on the DEM topography.
-- **Elevation Difference Analysis**: Estimates elevation changes ($\Delta z = z_{2022} - z_{2017}$) at over 94,000 overlapping track points, tracking glacier thickness changes.
-- **Vertical Datum Correction**: Explains the systematic $+21.15$ m offset caused by different vertical datums: WGS84 ellipsoidal heights (MCoRDS 2017) vs. CGVD2013 orthometric geoid heights (DEM 2022). With a geoid height $N \approx -22$ m in this region, $H_{ortho} \approx H_{ellip} + 22$ m, which perfectly resolves the observed difference when combined with surface thinning of approximately $-1$ to $-3$ m over the 5-year period.
+The repository includes tools to compare the 2022 Digital Elevation Model (DEM) of the Penny Ice Cap with the 2017 MCoRDS L2 radar surface elevations using two approaches:
 
-### Run DEM Analysis
-To execute the comparison and generate the plots:
-```bash
-python src/dem_analysis.py
-```
-This generates three plots in the root directory:
-1. `dem_2022_topography.png` (2022 DEM Topographic Map)
-2. `glacier_elevation_change_map.png` (Spatial Elevation Change Map)
-3. `glacier_elevation_comparison_scatter.png` (Elevation Scatter Plot Comparison)
+### 1. Point-Profile Track Comparison
+Extracts the 2022 DEM values directly at the 94,000+ flight track points to compute the elevation difference ($\Delta z = z_{2022} - z_{2017}$) at each measurement point.
+*   **Run command**: `python src/dem_analysis.py`
+*   **Outputs**:
+    1. `dem_2022_topography.png` (2022 DEM Topographic Map with boundary overlay)
+    2. `glacier_elevation_change_map.png` (Elevation Change along flight lines)
+    3. `glacier_elevation_comparison_scatter.png` (Scatter plot comparison)
 
 | 2022 DEM Topography | Elevation Change (2022 - 2017) | Elevation Comparison Scatter |
 |:---:|:---:|:---:|
 | ![DEM Topography](dem_2022_topography.png) | ![Elevation Change Map](glacier_elevation_change_map.png) | ![Elevation Scatter](glacier_elevation_comparison_scatter.png) |
+
+### 2. Continuous Raster DEM Interpolation & Comparison
+Interpolates the 2017 MCoRDS L2 flight track points onto a regular grid (300x300 cells) using linear Delaunay triangulation to construct a **new 2017 DEM**, and compares it with the 2022 DEM as a continuous raster grid.
+*   **Run command**: `python src/create_dem_comparison.py`
+*   **Outputs**:
+    1. `data/penny_dem_2017_interpolated.tif` (Interpolated 2017 DEM as a GeoTIFF raster)
+    2. `penny_dem_2017_interpolated.png` (Interpolated 2017 DEM map)
+    3. `glacier_dem_change_raster.png` (Corrected continuous elevation change map showing glacier thinning)
+*   **Geodetic Datum Correction**: Corrects for the systematic $+21.15$ m offset caused by different vertical datums: WGS84 ellipsoidal heights (MCoRDS 2017) vs. CGVD2013 orthometric geoid heights (DEM 2022). With a geoid height $N \approx -22$ m in this region ($H_{ortho} \approx H_{ellip} + 22$ m), subtracting this geoid offset reveals a net glacier thinning of **$-4.022$ meters** between 2017 and 2022 (approx. $-0.80$ m/year ablation).
+
+| Interpolated 2017 DEM | Corrected Thinning Map (2022 - 2017) |
+|:---:|:---:|
+| ![2017 DEM](penny_dem_2017_interpolated.png) | ![Glacier Thinning Raster](glacier_dem_change_raster.png) |
 
 ---
 
