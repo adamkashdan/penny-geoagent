@@ -158,6 +158,34 @@ Interpolates the 2017 MCoRDS L2 flight track points onto a regular grid (300x300
 
 ---
 
+## Spatial-Temporal Historical Analysis (2013-2017)
+
+The repository provides a calibration and analysis suite to study multi-year changes in surface elevation and ice thickness by co-locating MCoRDS L2 radar profiles from four different campaign years (**2013, 2014, 2015, and 2017**).
+
+### Bedrock-Calibrated Reference Alignment
+Different Operation IceBridge campaigns frequently suffer from systematic vertical datum shifts (ranging from $+28$ m to $+45$ m) due to changes in GPS reference frames or geoid models. Since the subglacial bedrock is geologically stable and cannot change over this timescale, the script implements a **Bedrock Calibration algorithm**:
+1. Uses `scipy.spatial.cKDTree` to identify co-located track points from older campaigns within a $100$-meter radius of the 2017 tracks.
+2. Calculates the bedrock elevation difference ($\Delta z_{bed} = z_{bed,2017} - z_{bed,year}$) at all co-located points.
+3. Shifts the older campaigns' surface elevations by the mean bedrock offset to align them exactly to the 2017 reference datum.
+4. Interpolates the calibrated elevations and thickness values onto a shared regular grid ($200 \times 200$ cells) and masks out cells further than 2 km from the flight lines to eliminate extrapolation errors.
+
+*   **Run command**: `python src/historical_analysis.py`
+*   **Outputs**:
+    1. `historical_glacier_trends.png` (Glacier average thickness and calibrated surface elevation trends by year)
+    2. `historical_elevation_change_map.png` (Bedrock-calibrated surface elevation change, 2017 minus 2013)
+    3. `historical_thickness_change_map.png` (Direct ice thickness change, 2017 minus 2013)
+
+| Calibrated Glaciological Trends | Calibrated Surface Change (2017-2013) | Ice Thickness Change (2017-2013) |
+|:---:|:---:|:---:|
+| ![Calibrated Trends](historical_glacier_trends.png) | ![Surface Change Map](historical_elevation_change_map.png) | ![Thickness Change Map](historical_thickness_change_map.png) |
+
+*   **Key Results**:
+    - **Vertical Datum Offsets**: The bedrock calibration identified and corrected offsets of **$-34.73$ m** (2013), **$-28.84$ m** (2014), and **$-45.84$ m** (2015) relative to the 2017 baseline.
+    - **Surface Thinning**: The median calibrated surface change from 2013 to 2017 is **$-1.178$ meters** (approx. **$-0.294$ m/year** ablation rate).
+    - **Thickness Stability**: The median ice thickness change is **$+1.481$ meters**, confirming that the ice cap has remained relatively stable at the central dome track locations.
+
+---
+
 ## Example Questions to Ask:
 - *"What is the ice thickness and bedrock elevation at the coordinates 67.0145 N, -64.4217 W?"*
 - *"Show me a map of the ice thickness for the entire Penny Ice Cap survey area."*

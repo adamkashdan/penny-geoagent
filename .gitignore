@@ -24,6 +24,9 @@ glacier_elevation_change_map.png
 glacier_elevation_comparison_scatter.png
 penny_dem_2017_interpolated.png
 glacier_dem_change_raster.png
+historical_glacier_trends.png
+historical_elevation_change_map.png
+historical_thickness_change_map.png
 dem_analysis_summary.txt
 trace_write.py
 verify_tools.py
@@ -44,3 +47,7 @@ arctic-geoagent/
 !glacier_elevation_comparison_scatter.png
 !penny_dem_2017_interpolated.png
 !glacier_dem_change_raster.png
+!historical_glacier_trends.png
+!historical_elevation_change_map.png
+!historical_thickness_change_map.png
+
