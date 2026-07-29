@@ -149,7 +149,8 @@ Interpolates the 2017 MCoRDS L2 flight track points onto a regular grid (300x300
     1. `data/penny_dem_2017_interpolated.tif` (Interpolated 2017 DEM as a GeoTIFF raster)
     2. `penny_dem_2017_interpolated.png` (Interpolated 2017 DEM map)
     3. `glacier_dem_change_raster.png` (Corrected continuous elevation change map showing glacier thinning)
-*   **Geodetic Datum Correction**: Corrects for the systematic $+21.15$ m offset caused by different vertical datums: WGS84 ellipsoidal heights (MCoRDS 2017) vs. CGVD2013 orthometric geoid heights (DEM 2022). With a geoid height $N \approx -22$ m in this region ($H_{ortho} \approx H_{ellip} + 22$ m), subtracting this geoid offset reveals a net glacier thinning of **$-4.022$ meters** between 2017 and 2022 (approx. $-0.80$ m/year ablation).
+*   **Geodetic Datum & Year Verification**: Corrects for the systematic $+21.15$ m offset caused by different vertical datums: WGS84 ellipsoidal heights (MCoRDS 2017) vs. CGVD2013 orthometric geoid heights (DEM 2022). With a geoid height $N \approx -22$ m in this region ($H_{ortho} \approx H_{ellip} + 22$ m), subtracting this geoid offset reveals a net glacier thinning of **$-4.022$ meters** between 2017 and 2022 (approx. $-0.80$ m/year ablation).
+    *Note: Verification against NRCan HRDEM metadata shows that for the Cumberland Peninsula (Penny Ice Cap), the elevation models are compiled using satellite stereo-imagery from the **ArcticDEM** project (initially v3.0, released in 2018/2019, with updates in 2022/2023). The actual satellite images were captured between **2011 and 2017** (mostly centered around **2015–2016**). Thus, the DEM represents the glacier surface around 2015–2016 rather than a literal 2022 snapshot, which explains the high spatial alignment with the 2017 MCoRDS profiles.*
 
 | Interpolated 2017 DEM | Corrected Thinning Map (2022 - 2017) |
 |:---:|:---:|
