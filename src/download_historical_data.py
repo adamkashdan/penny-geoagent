@@ -7,6 +7,7 @@ import os
 import sys
 import json
 import requests
+from requests.auth import HTTPBasicAuth
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, "data")
@@ -25,6 +26,15 @@ def load_dotenv():
 
 
 load_dotenv()
+
+
+class EarthdataSession(requests.Session):
+    """Custom session to preserve basic authentication credentials when redirected to Earthdata login."""
+    def rebuild_auth(self, prepared_request, response):
+        headers = prepared_request.headers
+        if 'Authorization' not in headers:
+            if self.auth:
+                prepared_request.prepare_auth(self.auth)
 
 
 def get_granule_links() -> list[tuple[str, str]]:
@@ -61,40 +71,19 @@ def get_granule_links() -> list[tuple[str, str]]:
         return []
 
 
-def download_file(session: requests.Session, url: str, filename: str, auth: tuple[str, str]) -> bool:
+def download_file(session: EarthdataSession, url: str, filename: str) -> bool:
     """Downloads a file handling Earthdata authentication redirects."""
     dest_path = os.path.join(DATA_DIR, filename)
     print(f"Downloading {filename}...")
     
     try:
-        # We perform a GET request. The requests library automatically handles redirects.
-        # However, to handle Earthdata URS authentication, we use the auth tuple.
-        # To avoid sending credentials to non-auth hosts, requests only sends Auth header 
-        # on the initial request. If it gets redirected to urs.earthdata.nasa.gov, we must
-        # ensure it passes the credentials there.
-        # We can do this by using a custom redirect handler or just calling GET directly.
-        
-        # First attempt: let requests handle basic auth and redirects
-        response = session.get(url, auth=auth, stream=True)
-        
-        # If redirect happens to URS, sometimes auth gets stripped. 
-        # We check if the response content is HTML (meaning we ended up on the login page)
-        if response.status_code == 200 and 'text/html' in response.headers.get('Content-Type', ''):
-            # Try again by initiating request directly to the login service to get cookies
-            login_url = "https://urs.earthdata.nasa.gov/oauth/authorize"
-            # We can use the response history to find redirect URL or just do basic request
-            print("  Re-authenticating with Earthdata Login...")
-            # Trigger login to set session cookies
-            session.get(url, auth=auth)
-            # Re-download
-            response = session.get(url, stream=True)
-            
+        response = session.get(url, stream=True)
         response.raise_for_status()
         
-        # Verify content type is indeed csv/text
+        # Verify content type is indeed binary/data and not HTML login page
         content_type = response.headers.get('Content-Type', '')
         if 'text/html' in content_type:
-            print(f"  Error: Received HTML login page instead of data for {filename}. Check your credentials.")
+            print(f"  Error: Received HTML login page instead of data for {filename}. Check credentials.")
             return False
             
         with open(dest_path, 'wb') as f:
@@ -113,10 +102,9 @@ def main():
     
     if not username or not password:
         print("=== NASA Earthdata Downloader ===")
-        print("To download historical MCoRDS L2 datasets (2013, 2014, 2015), please set your credentials:")
-        print("  export EARTHDATA_USERNAME=\"your_username\"")
-        print("  export EARTHDATA_PASSWORD=\"your_password\"")
-        print("\nIf you don't have an account, register for free at: https://urs.earthdata.nasa.gov/")
+        print("To download historical MCoRDS L2 datasets (2013, 2014, 2015), please set credentials in .env:")
+        print("  EARTHDATA_USERNAME=your_username")
+        print("  EARTHDATA_PASSWORD=your_password")
         sys.exit(1)
         
     targets = get_granule_links()
@@ -126,13 +114,12 @@ def main():
         
     print(f"Found {len(targets)} historical files to download.")
     
-    session = requests.Session()
-    # Configure session to trust redirects and retain cookies
-    auth = (username, password)
+    session = EarthdataSession()
+    session.auth = HTTPBasicAuth(username, password)
     
     success_count = 0
     for filename, url in sorted(targets):
-        if download_file(session, url, filename, auth):
+        if download_file(session, url, filename):
             success_count += 1
             
     print(f"\nFinished. Successfully downloaded {success_count}/{len(targets)} files.")
