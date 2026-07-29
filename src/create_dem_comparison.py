@@ -1,6 +1,6 @@
 """
 Creates a 2017 raster DEM from MCoRDS L2 flight track points using linear interpolation,
-and compares it as a continuous raster grid with the 2022 DEM.
+and compares it as a continuous raster grid with the 2015-2016 DEM.
 Saves the interpolated DEM as a GeoTIFF and outputs comparison maps.
 """
 from __future__ import annotations
@@ -18,9 +18,9 @@ import matplotlib.pyplot as plt
 
 BASE_DIR = os.path.join(os.path.dirname(__file__), "..")
 DATA_DIR = os.path.join(BASE_DIR, "data")
-DEM_DIR = os.path.join(DATA_DIR, "DEM_2022")
+DEM_DIR = os.path.join(DATA_DIR, "DEM_2015-2016")
 
-TIF_2022_PATH = os.path.join(DEM_DIR, "baffin_glacier_Name_Penny Ice Cap.tif")
+TIF_DEM_PATH = os.path.join(DEM_DIR, "baffin_glacier_Name_Penny Ice Cap.tif")
 SHP_PATH = os.path.join(DEM_DIR, "Name_Penny Ice Cap.shp")
 CSV_PATH = os.path.join(DATA_DIR, "IRMCR2_20170428_03_raw_data.csv")
 TIF_2017_PATH = os.path.join(DATA_DIR, "penny_dem_2017_interpolated.tif")
@@ -96,18 +96,18 @@ def run_dem_interpolation():
         
     print("DEM GeoTIFF written successfully.")
     
-    # 5. Load 2022 DEM and sample it at the grid locations
-    print("Sampling 2022 DEM at the same grid cells...")
+    # 5. Load 2015-2016 DEM and sample it at the grid locations
+    print("Sampling 2015-2016 DEM at the same grid cells...")
     grid_coords = np.column_stack((grid_x.ravel(), grid_y.ravel()))
     
-    with rasterio.open(TIF_2022_PATH) as src_22:
-        grid_z22 = np.array([val[0] for val in src_22.sample(grid_coords)]).reshape((grid_size, grid_size))
-        grid_z22 = np.where(grid_z22 == src_22.nodata, np.nan, grid_z22)
+    with rasterio.open(TIF_DEM_PATH) as src_dem:
+        grid_zdem = np.array([val[0] for val in src_dem.sample(grid_coords)]).reshape((grid_size, grid_size))
+        grid_zdem = np.where(grid_zdem == src_dem.nodata, np.nan, grid_zdem)
         
     # Calculate elevation change
-    # dz = z_2022 - z_2017
-    # Note: Mean datum offset between ellipsoidal (2017) and orthometric (2022) is ~21.15m
-    grid_dz_raw = grid_z22 - grid_z17
+    # dz = z_dem - z_2017
+    # Note: Mean datum offset between ellipsoidal (2017) and orthometric (2015-2016) is ~21.15m
+    grid_dz_raw = grid_zdem - grid_z17
     grid_dz_corrected = grid_dz_raw - 21.153
     
     # Load Shapefile outline for overlay
@@ -138,7 +138,7 @@ def run_dem_interpolation():
     fig, ax = plt.subplots(figsize=(6, 5))
     im = ax.imshow(grid_dz_vis, cmap="RdBu", extent=dem_extent, origin="upper", vmin=-15, vmax=15)
     gdf.boundary.plot(ax=ax, color="black", linewidth=1.0)
-    ax.set_title("Glacier Thinning / Elevation Change (2022 - 2017)\n(Datum Corrected, N = -21.15 m)", fontsize=9, fontweight="bold")
+    ax.set_title("Glacier Thinning / Elevation Change (2015-2016 vs 2017)\n(Datum Corrected, N = -21.15 m)", fontsize=9, fontweight="bold")
     ax.set_xlabel("Easting (meters, North America Albers)", fontsize=8)
     ax.set_ylabel("Northing (meters, North America Albers)", fontsize=8)
     fig.colorbar(im, ax=ax, label="Elevation Change (meters)")

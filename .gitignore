@@ -19,7 +19,7 @@ test_map.png
 test_pil_map.png
 test_s2_ndsi.png
 test_s2_rgb.png
-dem_2022_topography.png
+dem_2015_2016_topography.png
 glacier_elevation_change_map.png
 glacier_elevation_comparison_scatter.png
 penny_dem_2017_interpolated.png
@@ -39,7 +39,7 @@ arctic-geoagent/
 # Allowed images for README rendering
 !pil_distribution_map.png
 !pil_velocity_profile.png
-!dem_2022_topography.png
+!dem_2015_2016_topography.png
 !glacier_elevation_change_map.png
 !glacier_elevation_comparison_scatter.png
 !penny_dem_2017_interpolated.png

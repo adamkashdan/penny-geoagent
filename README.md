@@ -128,31 +128,31 @@ This generates two plots in the root directory:
 
 ## Digital Elevation Model (DEM) Analysis & Elevation Change
 
-The repository includes tools to compare the 2022 Digital Elevation Model (DEM) of the Penny Ice Cap with the 2017 MCoRDS L2 radar surface elevations using two approaches:
+The repository includes tools to compare the 2015-2016 Digital Elevation Model (DEM) of the Penny Ice Cap with the 2017 MCoRDS L2 radar surface elevations using two approaches:
 
 ### 1. Point-Profile Track Comparison
-Extracts the 2022 DEM values directly at the 94,000+ flight track points to compute the elevation difference ($\Delta z = z_{2022} - z_{2017}$) at each measurement point.
+Extracts the 2015-2016 DEM values directly at the 94,000+ flight track points to compute the elevation difference ($\Delta z = z_{\text{DEM}} - z_{2017}$) at each measurement point.
 *   **Run command**: `python src/dem_analysis.py`
 *   **Outputs**:
-    1. `dem_2022_topography.png` (2022 DEM Topographic Map with boundary overlay)
+    1. `dem_2015_2016_topography.png` (2015-2016 DEM Topographic Map with boundary overlay)
     2. `glacier_elevation_change_map.png` (Elevation Change along flight lines)
     3. `glacier_elevation_comparison_scatter.png` (Scatter plot comparison)
 
-| 2022 DEM Topography | Elevation Change (2022 - 2017) | Elevation Comparison Scatter |
+| 2015-2016 DEM Topography | Elevation Change (2015-2016 vs 2017) | Elevation Comparison Scatter |
 |:---:|:---:|:---:|
-| ![DEM Topography](dem_2022_topography.png) | ![Elevation Change Map](glacier_elevation_change_map.png) | ![Elevation Scatter](glacier_elevation_comparison_scatter.png) |
+| ![DEM Topography](dem_2015_2016_topography.png) | ![Elevation Change Map](glacier_elevation_change_map.png) | ![Elevation Scatter](glacier_elevation_comparison_scatter.png) |
 
 ### 2. Continuous Raster DEM Interpolation & Comparison
-Interpolates the 2017 MCoRDS L2 flight track points onto a regular grid (300x300 cells) using linear Delaunay triangulation to construct a **new 2017 DEM**, and compares it with the 2022 DEM as a continuous raster grid.
+Interpolates the 2017 MCoRDS L2 flight track points onto a regular grid (300x300 cells) using linear Delaunay triangulation to construct a **new 2017 DEM**, and compares it with the 2015-2016 DEM as a continuous raster grid.
 *   **Run command**: `python src/create_dem_comparison.py`
 *   **Outputs**:
     1. `data/penny_dem_2017_interpolated.tif` (Interpolated 2017 DEM as a GeoTIFF raster)
     2. `penny_dem_2017_interpolated.png` (Interpolated 2017 DEM map)
     3. `glacier_dem_change_raster.png` (Corrected continuous elevation change map showing glacier thinning)
-*   **Geodetic Datum & Year Verification**: Corrects for the systematic $+21.15$ m offset caused by different vertical datums: WGS84 ellipsoidal heights (MCoRDS 2017) vs. CGVD2013 orthometric geoid heights (DEM 2022). With a geoid height $N \approx -22$ m in this region ($H_{ortho} \approx H_{ellip} + 22$ m), subtracting this geoid offset reveals a net glacier thinning of **$-4.022$ meters** between 2017 and 2022 (approx. $-0.80$ m/year ablation).
+*   **Geodetic Datum & Year Verification**: Corrects for the systematic $+21.15$ m offset caused by different vertical datums: WGS84 ellipsoidal heights (MCoRDS 2017) vs. CGVD2013 orthometric geoid heights (DEM 2015-2016). With a geoid height $N \approx -22$ m in this region ($H_{\text{ortho}} \approx H_{\text{ellip}} + 22$ m), subtracting this geoid offset reveals a net glacier thinning of **$-4.022$ meters** between 2015-2016 and 2017 (approx. $-2.0$ m/year ablation over the ~2 year offset).
     *Note: Verification against NRCan HRDEM metadata shows that for the Cumberland Peninsula (Penny Ice Cap), the elevation models are compiled using satellite stereo-imagery from the **ArcticDEM** project (initially v3.0, released in 2018/2019, with updates in 2022/2023). The actual satellite images were captured between **2011 and 2017** (mostly centered around **2015–2016**). Thus, the DEM represents the glacier surface around 2015–2016 rather than a literal 2022 snapshot, which explains the high spatial alignment with the 2017 MCoRDS profiles.*
 
-| Interpolated 2017 DEM | Corrected Thinning Map (2022 - 2017) |
+| Interpolated 2017 DEM | Corrected Thinning Map (2015-2016 vs 2017) |
 |:---:|:---:|
 | ![2017 DEM](penny_dem_2017_interpolated.png) | ![Glacier Thinning Raster](glacier_dem_change_raster.png) |
 
