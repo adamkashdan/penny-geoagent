@@ -126,6 +126,29 @@ This generates two plots in the root directory:
 
 ---
 
+## Digital Elevation Model (DEM) 2022 Analysis & Elevation Change
+
+The repository includes a script to compare the 2022 Digital Elevation Model (DEM) of the Penny Ice Cap with the 2017 MCoRDS L2 radar surface elevations:
+- **Glacier Boundary Overlay**: Overlays the glacier boundary outline from the Shapefile on the DEM topography.
+- **Elevation Difference Analysis**: Estimates elevation changes ($\Delta z = z_{2022} - z_{2017}$) at over 94,000 overlapping track points, tracking glacier thickness changes.
+- **Vertical Datum Correction**: Explains the systematic $+21.15$ m offset caused by different vertical datums: WGS84 ellipsoidal heights (MCoRDS 2017) vs. CGVD2013 orthometric geoid heights (DEM 2022). With a geoid height $N \approx -22$ m in this region, $H_{ortho} \approx H_{ellip} + 22$ m, which perfectly resolves the observed difference when combined with surface thinning of approximately $-1$ to $-3$ m over the 5-year period.
+
+### Run DEM Analysis
+To execute the comparison and generate the plots:
+```bash
+python src/dem_analysis.py
+```
+This generates three plots in the root directory:
+1. `dem_2022_topography.png` (2022 DEM Topographic Map)
+2. `glacier_elevation_change_map.png` (Spatial Elevation Change Map)
+3. `glacier_elevation_comparison_scatter.png` (Elevation Scatter Plot Comparison)
+
+| 2022 DEM Topography | Elevation Change (2022 - 2017) | Elevation Comparison Scatter |
+|:---:|:---:|:---:|
+| ![DEM Topography](dem_2022_topography.png) | ![Elevation Change Map](glacier_elevation_change_map.png) | ![Elevation Scatter](glacier_elevation_comparison_scatter.png) |
+
+---
+
 ## Example Questions to Ask:
 - *"What is the ice thickness and bedrock elevation at the coordinates 67.0145 N, -64.4217 W?"*
 - *"Show me a map of the ice thickness for the entire Penny Ice Cap survey area."*
