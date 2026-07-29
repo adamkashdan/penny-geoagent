@@ -12,6 +12,21 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 
 
+def load_dotenv():
+    # Try common locations for .env relative to current working directory
+    for path in [".env", "src/.env", "../.env", "penny_agent/.env"]:
+        if os.path.exists(path):
+            with open(path) as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#") and "=" in line:
+                        k, v = line.split("=", 1)
+                        os.environ[k.strip()] = v.strip("'\"")
+
+
+load_dotenv()
+
+
 def get_granule_links() -> list[tuple[str, str]]:
     """Queries NASA CMR API for all IRMCR2 granules (excluding the current 2017 dataset)."""
     bbox = "-68.3,66.3,-63.7,67.8"
