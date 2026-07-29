@@ -11,3 +11,5 @@ pyyaml
 pydantic
 dbfread
 python-pptx
+scipy
+
