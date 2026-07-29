@@ -12,4 +12,4 @@ pydantic
 dbfread
 python-pptx
 scipy
-
+h5py
