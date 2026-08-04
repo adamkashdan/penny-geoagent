@@ -52,5 +52,11 @@ arctic-geoagent/
 !historical_elevation_change_map.png
 !historical_thickness_change_map.png
 !icesat2_12year_trend.png
+!atm_validation_histogram.png
+!atm_validation_map.png
+!atm_validation_thickness.png
 
-
+# Document generation and MS Word outputs
+*.docx
+convert_to_docx.py
+style_docx.py
