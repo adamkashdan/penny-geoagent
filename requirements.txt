@@ -13,3 +13,4 @@ dbfread
 python-pptx
 scipy
 h5py
+python-docx

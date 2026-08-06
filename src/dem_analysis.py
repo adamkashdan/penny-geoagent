@@ -52,35 +52,94 @@ def run_dem_analysis():
     print("Loading glacier boundary shapefile...")
     gdf = gpd.read_file(SHP_PATH)
     
-    # 3. Load and plot DEM
+    # 3. Load and plot DEM & Bedrock Topography (Two-Panel Figure)
     print("Opening 2015-2016 DEM TIFF...")
     with rasterio.open(TIF_PATH) as src:
         dem_crs = src.crs.to_string()
         print(f"DEM CRS: {dem_crs}")
         
         # Read downsampled DEM for visualization
-        factor = 10
+        factor = 5
         dem_data = src.read(1, out_shape=(src.height // factor, src.width // factor))
         dem_data = np.where(dem_data == src.nodata, np.nan, dem_data)
         
         # Get bounds of downsampled image
         dem_extent = [src.bounds.left, src.bounds.right, src.bounds.bottom, src.bounds.top]
         
-        # Plot DEM Topography
-        print("Generating DEM topography map...")
-        fig, ax = plt.subplots(figsize=(7, 6))
-        im = ax.imshow(dem_data, cmap="terrain", extent=dem_extent, origin="upper")
-        gdf.boundary.plot(ax=ax, color="black", linewidth=1.2, label="Glacier Boundary")
-        ax.set_title("Penny Ice Cap (2015-2016): Digital Elevation Model (DEM)", fontsize=10, fontweight="bold")
-        ax.set_xlabel("Easting (meters, North America Albers)", fontsize=8)
-        ax.set_ylabel("Northing (meters, North America Albers)", fontsize=8)
-        ax.grid(True, linestyle="--", alpha=0.5)
-        fig.colorbar(im, ax=ax, label="Elevation (m above sea level)")
+        # Load MCoRDS data to interpolate bedrock elevation
+        print("Loading MCoRDS bedrock elevations...")
+        df_csv = pd.read_csv(CSV_PATH)
+        df_csv = df_csv.dropna(subset=["LAT", "LON", "ELEVATION", "BOTTOM", "THICK"])
+        df_csv = df_csv[(df_csv["ELEVATION"] > -9000) & (df_csv["BOTTOM"] > -9000) & (df_csv["THICK"] >= 0)]
+        
+        # Project bedrock points to DEM CRS
+        print("Projecting bedrock track points...")
+        bed_xs, bed_ys = transform('EPSG:4326', src.crs, df_csv['LON'].tolist(), df_csv['LAT'].tolist())
+        bed_zs = (df_csv['ELEVATION'] - df_csv['BOTTOM']).tolist()
+        
+        # Interpolate bedrock heights onto the regular grid
+        print("Interpolating bedrock elevation using griddata...")
+        grid_size = 300
+        x_grid = np.linspace(src.bounds.left, src.bounds.right, grid_size)
+        y_grid = np.linspace(src.bounds.top, src.bounds.bottom, grid_size)
+        grid_x, grid_y = np.meshgrid(x_grid, y_grid)
+        
+        from scipy.interpolate import griddata
+        bed_grid = griddata((bed_xs, bed_ys), bed_zs, (grid_x, grid_y), method="linear")
+        
+        # Mask bedrock topography outside glacier boundary
+        print("Masking bedrock topography outside glacier boundary...")
+        from rasterio.features import rasterize
+        try:
+            poly = gdf.geometry.union_all()
+        except AttributeError:
+            poly = gdf.geometry.unary_union
+            
+        shapes = [(poly, 1)]
+        res_x = (src.bounds.right - src.bounds.left) / grid_size
+        res_y = (src.bounds.top - src.bounds.bottom) / grid_size
+        out_transform = rasterio.transform.from_origin(src.bounds.left, src.bounds.top, res_x, res_y)
+        
+        boundary_mask = rasterize(shapes, out_shape=(grid_size, grid_size), transform=out_transform, fill=0, default_value=1, all_touched=True)
+        bed_grid_masked = np.where(boundary_mask == 1, bed_grid, np.nan)
+        
+        # Plot side-by-side panels
+        print("Generating two-panel surface & bedrock topography maps...")
+        fig, axes = plt.subplots(1, 2, figsize=(14, 6), sharey=True)
+        
+        # Panel A: Surface Elevation
+        im_a = axes[0].imshow(dem_data, cmap="Blues_r", extent=dem_extent, origin="upper")
+        
+        # Add topographic contour lines (every 200m)
+        levels = np.arange(200, 2200, 200)
+        contours = axes[0].contour(dem_data, levels=levels, extent=dem_extent, origin="upper", colors="black", linewidths=0.5, alpha=0.6)
+        axes[0].clabel(contours, inline=True, fmt="%d", fontsize=6, colors="black")
+        
+        gdf.boundary.plot(ax=axes[0], color="black", linewidth=1.5, label="Glacier Boundary")
+        axes[0].set_title("(a) Map of Penny Ice Cap (2015-2016 Surface DEM)", fontsize=10, fontweight="bold")
+        axes[0].set_xlabel("Easting (meters, North America Albers)", fontsize=8)
+        axes[0].set_ylabel("Northing (meters, North America Albers)", fontsize=8)
+        axes[0].grid(True, linestyle="--", alpha=0.3)
+        cbar_a = fig.colorbar(im_a, ax=axes[0], shrink=0.7, pad=0.03)
+        cbar_a.set_label("Elevation (m a.s.l.)", fontsize=8)
+        
+        # Panel B: Bedrock Topography & Flight Tracks
+        im_b = axes[1].imshow(bed_grid_masked, cmap="gist_earth", extent=dem_extent, origin="upper")
+        axes[1].plot(bed_xs, bed_ys, color="orange", linestyle="--", linewidth=1.0, label="2017 MCoRDS Tracks")
+        gdf.boundary.plot(ax=axes[1], color="black", linewidth=1.5)
+        axes[1].set_title("(b) 2017 NASA IceBridge Radar Tracks & Bedrock Topography", fontsize=10, fontweight="bold")
+        axes[1].set_xlabel("Easting (meters, North America Albers)", fontsize=8)
+        axes[1].legend(loc="upper right", fontsize=8)
+        axes[1].grid(True, linestyle="--", alpha=0.3)
+        cbar_b = fig.colorbar(im_b, ax=axes[1], shrink=0.7, pad=0.03)
+        cbar_b.set_label("Elevation (m a.s.l.)", fontsize=8)
+        
+        fig.tight_layout()
         
         dem_map_path = os.path.join(BASE_DIR, "dem_2015_2016_topography.png")
         fig.savefig(dem_map_path, dpi=120, bbox_inches="tight")
         plt.close(fig)
-        print(f"Saved DEM map to: {dem_map_path}")
+        print(f"Saved two-panel DEM map to: {dem_map_path}")
         
         # 4. Compare with 2017 MCoRDS Surface Elevation
         print("Loading 2017 MCoRDS flight tracks...")

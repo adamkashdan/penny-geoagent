@@ -230,26 +230,43 @@ Ice Thickness Change (H_2017 - H_2013):
     plt.close(fig)
     print(f"Saved trends plot to: {trend_plot_path}")
     
-    # Plot 2: Calibrated Surface Elevation Change Map
-    print("Generating calibrated surface change map...")
+    # Plot 2: Calibrated Surface Elevation Change and Thickness Change Map (Two-Panel Figure)
+    print("Generating calibrated surface and thickness change maps (two-panel)...")
     gdf_boundary = gpd.read_file(SHP_PATH) if os.path.exists(SHP_PATH) else None
     extent = [x_min, x_max, y_min, y_max]
     
-    fig, ax = plt.subplots(figsize=(6, 5))
-    im = ax.imshow(dz_surf_corr, cmap="RdBu", extent=extent, origin="upper", vmin=-15, vmax=15)
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5.5), sharey=True)
+    
+    # Left subplot (ax1): Surface elevation change
+    im1 = ax1.imshow(dz_surf_corr, cmap="RdBu", extent=extent, origin="upper", vmin=-15, vmax=15)
     if gdf_boundary is not None:
-        gdf_boundary.boundary.plot(ax=ax, color="black", linewidth=1.0)
-    ax.set_title("Penny Ice Cap: Calibrated Surface Elevation Change (2017 - 2013)", fontsize=9, fontweight="bold")
-    ax.set_xlabel("Easting (m, North America Albers)", fontsize=8)
-    ax.set_ylabel("Northing (m, North America Albers)", fontsize=8)
-    fig.colorbar(im, ax=ax, label="Elevation Change (meters)")
+        gdf_boundary.boundary.plot(ax=ax1, color="black", linewidth=1.0)
+    ax1.set_title("(a) Calibrated Surface Elevation Change\n(2017 minus 2013)", fontsize=10, fontweight="bold")
+    ax1.set_xlabel("Easting (m, North America Albers)", fontsize=8)
+    ax1.set_ylabel("Northing (m, North America Albers)", fontsize=8)
+    ax1.grid(True, linestyle="--", alpha=0.3)
+    cbar1 = fig.colorbar(im1, ax=ax1, shrink=0.7, pad=0.03)
+    cbar1.set_label("Elevation Change (meters)", fontsize=8)
+    
+    # Right subplot (ax2): Thickness change
+    im2 = ax2.imshow(d_thick, cmap="RdBu", extent=extent, origin="upper", vmin=-15, vmax=15)
+    if gdf_boundary is not None:
+        gdf_boundary.boundary.plot(ax=ax2, color="black", linewidth=1.0)
+    ax2.set_title("(b) Ice Thickness Change\n(2017 minus 2013)", fontsize=10, fontweight="bold")
+    ax2.set_xlabel("Easting (m, North America Albers)", fontsize=8)
+    ax2.grid(True, linestyle="--", alpha=0.3)
+    cbar2 = fig.colorbar(im2, ax=ax2, shrink=0.7, pad=0.03)
+    cbar2.set_label("Thickness Change (meters)", fontsize=8)
+    
+    fig.tight_layout()
+    
     surf_change_path = os.path.join(BASE_DIR, "historical_elevation_change_map.png")
     fig.savefig(surf_change_path, dpi=120, bbox_inches="tight")
     plt.close(fig)
-    print(f"Saved calibrated surface change map to: {surf_change_path}")
+    print(f"Saved calibrated two-panel change map to: {surf_change_path}")
     
-    # Plot 3: Ice Thickness Change Map
-    print("Generating thickness change map...")
+    # Plot 3: Standalone Ice Thickness Change Map (for compatibility)
+    print("Generating individual thickness change map...")
     fig, ax = plt.subplots(figsize=(6, 5))
     im = ax.imshow(d_thick, cmap="RdBu", extent=extent, origin="upper", vmin=-15, vmax=15)
     if gdf_boundary is not None:
@@ -257,7 +274,9 @@ Ice Thickness Change (H_2017 - H_2013):
     ax.set_title("Penny Ice Cap: Ice Thickness Change (2017 - 2013)", fontsize=9, fontweight="bold")
     ax.set_xlabel("Easting (m, North America Albers)", fontsize=8)
     ax.set_ylabel("Northing (m, North America Albers)", fontsize=8)
-    fig.colorbar(im, ax=ax, label="Thickness Change (meters)")
+    cbar = fig.colorbar(im, ax=ax, shrink=0.8, pad=0.03)
+    cbar.set_label("Thickness Change (meters)", fontsize=8)
+    
     thick_change_path = os.path.join(BASE_DIR, "historical_thickness_change_map.png")
     fig.savefig(thick_change_path, dpi=120, bbox_inches="tight")
     plt.close(fig)

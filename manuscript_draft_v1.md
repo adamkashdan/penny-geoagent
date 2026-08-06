@@ -101,8 +101,8 @@ $$H_{ortho} = H_{ellip} - N$$
 Applying this correction yields a residual mean elevation difference of **$-4.022$ m** ($z_{DEM} - z_{2017}$). 
 This residual thinning rate suggests that the ArcticDEM stereo-imagery used to compile the HRDEM Cumberland Peninsula tile was captured between **2015 and 2016** (approx. 1.5–2 years prior to the April 2017 MCoRDS campaign), rather than its official metadata release date of 2022.
 
-![DEM Topography and Change](dem_2015_2016_topography.png)
-*Fig. 3. Topographic map of the Penny Ice Cap from the 2015–2016 DEM (left) and the datum-corrected elevation difference grid (right) showing glacier thinning.*
+![DEM and Bedrock Topography](dem_2015_2016_topography.png)
+*Fig. 3. Penny Ice Cap surface and bed topography: (a) Map of Penny Ice Cap surface elevation from the 2015–2016 DEM, showing the glacier boundary (black); (b) 2017 NASA IceBridge MCoRDS airborne radar measurement tracks (orange dashed lines) and interpolated bedrock topography.*
 
 ### 3.3 Basal Shear Velocity Profile
 The SIA flow model shows that the inclusion of a soft basal Pleistocene Ice Layer ($E=3.5$) concentrates shear strain in the lower 12% of the ice column. 
