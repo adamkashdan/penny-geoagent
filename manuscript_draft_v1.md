@@ -6,12 +6,12 @@ $^2$ Geological Survey of Canada, Natural Resources Canada
 
 ---
 
-## Abstract
-Recent surface air temperature warming across the Canadian Arctic Archipelago has accelerated the thinning and retreat of ice caps on Baffin Island. In this study, we utilize Level 2 airborne radar sounding profiles from the Multichannel Coherent Radar Depth Sounder (MCoRDS), collected during NASA's Operation IceBridge campaigns between 2013 and 2017, to evaluate the spatial-temporal dynamics of the Penny Ice Cap. To overcome systematic geodetic vertical datum offsets (ranging from $-28.8$ m to $-45.8$ m) between different campaign years, we introduce a bedrock-calibration algorithm that uses the stable subglacial bedrock as a static geodetic reference. Our calibrated multi-temporal analysis reveals a median ice cap surface lowering of $-1.178$ meters between 2013 and 2017 (approx. $-0.294$ m a $^{-1}$ ablation rate), while the median ice thickness remained relatively stable ($+1.481$ m change). Comparison of the 2017 MCoRDS profile with the Canadian High Resolution Digital Elevation Model (HRDEM) reveals a systematic $+21.15$ m datum offset (WGS84 ellipsoidal vs. CGVD2013 orthometric heights) and verifies that the HRDEM Cumberland Peninsula tile corresponds to a 2015–2016 ArcticDEM satellite image composite rather than a literal 2022 snapshot. Finally, we model the vertical ice velocity profile under the Shallow Ice Approximation (SIA) using Glen's flow law. Incorporating a soft basal Pleistocene Ice Layer (PIL) with a fluidity enhancement factor ($E = 3.5$) shows that shear deformation is heavily concentrated in the lowermost 12% of the ice column, increasing sliding velocity and suggesting that basal ice stratigraphy plays a primary role in regulating glacier response to climate warming.
+## ABSTRACT
+Recent atmospheric warming across the Canadian Arctic Archipelago has accelerated ice cap thinning on Baffin Island. We utilize Level 2 airborne radar sounding profiles from the Multichannel Coherent Radar Depth Sounder (MCoRDS) collected during NASA's Operation IceBridge (2013–2017) to evaluate the spatial-temporal dynamics of the Penny Ice Cap. To correct systematic geodetic vertical datum offsets ($-28.8$ to $-45.8$ m) between campaigns, we develop a bedrock-calibration algorithm using stable subglacial bedrock as a static reference. Our calibrated analysis reveals a median surface lowering of $-1,178$ m (ablation rate $-0,294$ m a$^{-1}$) between 2013 and 2017, while median thickness remained stable. Comparing the 2017 radar profile with the Canadian High Resolution DEM (HRDEM) reveals a systematic $+21,15$ m datum offset (WGS84 ellipsoidal vs. CGVD2013 orthometric heights) and verifies that the HRDEM Cumberland Peninsula tile corresponds to a 2015–2016 ArcticDEM composite rather than a 2022 snapshot. Finally, modeling the vertical ice velocity under the Shallow Ice Approximation (SIA) shows that incorporating a soft basal Pleistocene Ice Layer ($E=3,5$) concentrates shear deformation in the lowermost 12% of the ice column, increasing sliding velocity and highlighting the role of basal ice stratigraphy in regulating glacier response to climate warming.
 
 ---
 
-## 1. Introduction
+## 1. INTRODUCTION
 The glaciers and ice caps of the Canadian Arctic Archipelago (CAA) represent one of the largest contributors to global sea-level rise outside of the Greenland and Antarctic ice sheets. Among these, the Penny Ice Cap on Baffin Island (surface area ~6,000 km$^2$) spans an elevation range from sea level to over 2,000 m above sea level. Monitoring the mass balance, surface lowering, and internal deformation of such ice caps is critical to predicting their future contribution to sea-level rise.
 
 Airborne radar sounding provides high-resolution profiles of ice thickness and subglacial topography. However, compiling multiple flight campaigns spanning several years is often hindered by geodetic inconsistencies. Systematic vertical datum offsets occur due to shifting GPS reference systems, differences in processing baselines, or geoid model transitions.
@@ -25,7 +25,7 @@ This paper addresses these issues by:
 
 ---
 
-## 2. Data and Methods
+## 2. DATA AND METHODS
 
 ### 2.1 Datasets
 We utilize four primary datasets:
@@ -34,7 +34,7 @@ We utilize four primary datasets:
 3. **Sentinel-2 Multi-spectral Imagery**: Used to verify surface features, snow lines, and glacier outlines.
 4. **IceBridge ATM L2 Icessn Elevation (ILATM2)**: High-resolution surface elevation measurements collected on the same flight campaign using the Airborne Topographic Mapper (ATM) laser scanner.
 
-### 2.2 Bedrock Calibration Method
+### 2.2 Bedrock calibration method
 To correct for geodetic vertical datum offsets between different campaign years, we define the 2017 MCoRDS campaign as the baseline. For each older campaign ($yr \in \{2013, 2014, 2015\}$), we find all points that are co-located within 100 meters of a 2017 track point using a $k$-dimensional tree (`cKDTree`).
 
 The subglacial bedrock elevation $z_{bed}$ is calculated as:
@@ -49,7 +49,7 @@ $$z_{surf, corr} = z_{surf} + \langle \Delta z_{bed} \rangle$$
 
 Finally, we interpolate the calibrated values onto a regular $200 \times 200$ grid using linear Delaunay triangulation and apply a 2 km buffer mask around the flight tracks to eliminate interpolation artifacts in unsurveyed zones.
 
-### 2.3 Pleistocene Ice Layer and Flow Velocity Modeling
+### 2.3 Pleistocene ice layer and flow velocity modeling
 We model the vertical velocity profile $u(z)$ under the Shallow Ice Approximation (SIA). According to Glen's flow law, the shear strain rate $\dot{\varepsilon}_{xz}$ is:
 $$\dot{\varepsilon}_{xz} = E A \tau^{n}$$
 where $A$ is the temperature-dependent ice fluidity, $n=3$ is the flow law exponent, $E$ is the fluidity enhancement factor, and $\tau$ is the shear stress:
@@ -62,19 +62,19 @@ $$H_p = \min(0.12 \times H, 80\text{ m})\quad \text{for } H > 150\text{ m}$$
 Within the Holocene ice ($z \ge H_p$), the enhancement factor is set to $E_h = 1.0$. Within the PIL ($z < H_p$), the enhancement factor is set to $E_p = 3.5$ to account for high dust content and fine crystal sizes. The velocity profile is obtained by integrating the strain rate from the bed ($z=0$) to height $z$:
 $$u(z) = u_b + 2 \int_0^z E(s) A \left[\rho g (H - s) \sin\alpha\right]^3 ds$$
 
-### 2.4 Sensor Validation Method
+### 2.4 Sensor validation method
 To validate the MCoRDS radar-derived surface elevations, we co-locate them with high-precision ATM L2 laser altimetry profiles. Since both sensors were flown simultaneously on April 28, 2017, they represent independent measurements of the same ice surface.
 
 Using a $k$-dimensional tree (`cKDTree`), we matched each ATM point to the nearest MCoRDS point within a 100-meter search radius. The elevation difference was computed as:
 $$\Delta z = z_{atm} - z_{mcoords}$$
 where $z_{atm}$ is the ellipsoidal laser height and $z_{mcoords}$ is the ellipsoidal radar height. Extreme outliers ($|\Delta z| > 100$ m) were removed to filter out cloud reflections.
 
-### 2.5 Code Availability
+### 2.5 Code availability
 The Python source code, GIS tools, bedrock-calibration algorithm, PIL modeling, and ICESat-2 analysis scripts developed for this study are publicly accessible on GitHub at [https://github.com/adamkashdan/penny-geoagent](https://github.com/adamkashdan/penny-geoagent).
 
 ---
 
-## 3. Results
+## 3. RESULTS
 
 ### 3.1 Multi-temporal Ice Thickness and Elevation Change (2013–2017)
 The bedrock-calibration algorithm identified significant systematic offsets relative to the 2017 baseline (Table 1).
@@ -94,7 +94,7 @@ The median surface change between 2013 and 2017 at overlapping tracks is **$-1.1
 ![Surface and Thickness Change Maps](historical_elevation_change_map.png)
 *Fig. 2. Spatial distribution of calibrated surface elevation change (left) and ice thickness change (right) between 2013 and 2017.*
 
-### 3.2 DEM Comparison and Geodetic Verification
+### 3.2 DEM comparison and geodetic verification
 Sampling the Canadian HRDEM along the 2017 MCoRDS track points revealed a mean elevation difference of **$+21.153$ m** ($z_{DEM} - z_{2017}$). This offset is geodetically explained by the vertical datum difference: the 2017 MCoRDS L2 elevations are referenced to the WGS84 ellipsoid, while the HRDEM is referenced to the CGVD2013 orthometric geoid. The geoid height in this region is $N \approx -21.15$ m, confirming that:
 $$H_{ortho} = H_{ellip} - N$$
 
@@ -104,7 +104,7 @@ This residual thinning rate suggests that the ArcticDEM stereo-imagery used to c
 ![DEM and Bedrock Topography](dem_2015_2016_topography.png)
 *Fig. 3. Penny Ice Cap surface and bed topography: (a) Map of Penny Ice Cap surface elevation from the 2015–2016 DEM, showing the glacier boundary (black); (b) 2017 NASA IceBridge MCoRDS airborne radar measurement tracks (orange dashed lines) and interpolated bedrock topography.*
 
-### 3.3 Basal Shear Velocity Profile
+### 3.3 Basal shear velocity profile
 The SIA flow model shows that the inclusion of a soft basal Pleistocene Ice Layer ($E=3.5$) concentrates shear strain in the lower 12% of the ice column. 
 
 ![PIL Profile](pil_velocity_profile.png)
@@ -147,14 +147,14 @@ The standard deviation of the elevation differences is **$13.141$ m**, demonstra
 
 ---
 
-## 4. Discussion
+## 4. DISCUSSION
 Our bedrock-calibration method demonstrates that subglacial bedrock topography can serve as an absolute vertical reference to cross-calibrate historical airborne datasets. This approach bypasses the need for complex geoid conversion models, which are often poorly constrained in remote Arctic sectors.
 
 The multi-decadal altimetry integration shows that while the Penny Ice Cap dome was relatively stable in the early 2010s, it has entered a state of rapid and accelerated thinning after 2019 (median change of $-13.79$ m by 2023). This accelerated thinning is temporally consistent with regional reports of extreme summer temperatures and increased meltwater runoff across Baffin Island. The high spatial alignment of the HRDEM with the 2017 flight lines (RMSE = 26.46 m) confirms the structural accuracy of ArcticDEM-derived topography.
 
 ---
 
-## 5. Conclusions
+## 5. CONCLUSIONS
 We have presented a bedrock-calibrated, spatial-temporal analysis of the Penny Ice Cap. Our key conclusions are:
 1. Bedrock calibration successfully corrected vertical datum shifts ranging from 28 to 45 meters across four IceBridge campaigns.
 2. Integrating ICESat-2 laser altimetry established a continuous 12-year (2013–2025) surface elevation time series, revealing an overall thinning rate of **$-1.28$ m a$^{-1}$** in the central sector.
@@ -165,7 +165,7 @@ We have presented a bedrock-calibrated, spatial-temporal analysis of the Penny I
 
 ---
 
-## References
+## REFERENCES
 1. Paden, J., et al. (2019). *IceBridge MCoRDS L2 Ice Thickness, Version 1*. Boulder, Colorado USA. NASA National Snow and Ice Data Center DAAC.
 2. Smith, B., et al. (2023). *ICESat-2 L3A Land Ice Height, Version 6*. Boulder, Colorado USA. NASA National Snow and Ice Data Center DAAC.
 3. Natural Resources Canada. (2022). *High Resolution Digital Elevation Model (HRDEM) - CanElevation Series*.
