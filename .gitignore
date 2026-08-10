@@ -58,5 +58,10 @@ arctic-geoagent/
 
 # Document generation and MS Word outputs
 *.docx
+*.pdf
 convert_to_docx.py
 style_docx.py
+
+# Russian translation files
+*_ru.md
+
