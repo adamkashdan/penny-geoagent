@@ -160,15 +160,15 @@ The standard deviation of the elevation differences is **$13.141$ m**, demonstra
 ## 4. DISCUSSION
 Our bedrock-calibration method demonstrates that subglacial bedrock topography can serve as an absolute vertical reference to cross-calibrate historical airborne datasets. This approach bypasses the need for complex geoid conversion models, which are often poorly constrained in remote Arctic sectors.
 
-The multi-decadal altimetry integration shows that while the Penny Ice Cap dome was relatively stable in the early 2010s, it has entered a state of rapid and accelerated thinning after 2019 (median change of $-13.79$ m by 2023). This accelerated thinning is temporally consistent with regional reports of extreme summer temperatures and increased meltwater runoff across Baffin Island. The high spatial alignment of the HRDEM with the 2017 flight lines (RMSE = 26.46 m) confirms the structural accuracy of ArcticDEM-derived topography.
+The multi-decadal altimetry integration shows that while the Penny Ice Cap dome was relatively stable in the 2010s (including stable heights between 2017 and 2019), it has experienced thinning of $-1.712$ m by 2021. This thinning trend is temporally consistent with regional reports of summer warming and increased meltwater runoff across Baffin Island. The high spatial alignment of the HRDEM with the 2017 flight lines (RMSE = 26.46 m) confirms the structural accuracy of ArcticDEM-derived topography.
 
 ---
 
 ## 5. CONCLUSIONS
 We have presented a bedrock-calibrated, spatial-temporal analysis of the Penny Ice Cap. Our key conclusions are:
 1. Bedrock calibration successfully corrected vertical datum shifts ranging from 28 to 45 meters across four IceBridge campaigns.
-2. Integrating ICESat-2 laser altimetry established a continuous 12-year (2013–2025) surface elevation time series, revealing an overall thinning rate of **$-1.28$ m a$^{-1}$** in the central sector.
-3. The Penny Ice Cap dome has experienced an accelerated surface lowering after 2019, reaching a median change of **$-13.790$ m** by 2023.
+2. Integrating ICESat-2 laser altimetry established a continuous 8-year (2013–2021) surface elevation time series, revealing an overall thinning rate of **$-0.326$ m a$-1$** in the central sector.
+3. The Penny Ice Cap dome remained relatively stable until 2019, followed by a surface lowering of **$-1.712$ m** by 2021.
 4. The Canadian HRDEM contains a $+21.15$ m orthometric-to-ellipsoidal offset over the Penny Ice Cap and represents the glacier surface around 2015–2016.
 5. Modeling a soft basal Pleistocene Ice Layer concentrates shear strain near the bed, significantly increasing ice surface velocity.
 6. Co-location with simultaneous IceBridge ATM L2 laser altimetry validated the 2017 MCoRDS surface elevations, identifying a systematic $+28.721$ m vertical datum offset (std dev $13.141$ m).
