@@ -94,6 +94,43 @@ def load_mcords_2017() -> pd.DataFrame:
     return df
 
 
+def generate_icesat2_track_map(is2_data_by_year, df_17):
+    """Generates and saves a map of ICESat-2 altimetry tracks and co-located 2017 MCoRDS tracks."""
+    print("Generating ICESat-2 tracks map...")
+    gdf_boundary = gpd.read_file(SHP_PATH) if os.path.exists(SHP_PATH) else None
+    
+    fig, ax = plt.subplots(figsize=(8, 7))
+    
+    # Plot glacier boundary reprojected to EPSG:4326 (Lat/Lon)
+    if gdf_boundary is not None:
+        try:
+            gdf_boundary_wgs84 = gdf_boundary.to_crs("EPSG:4326")
+            gdf_boundary_wgs84.boundary.plot(ax=ax, color="black", linewidth=1.2, label="Glacier Boundary")
+        except Exception as e:
+            print(f"Warning: Could not plot boundary: {e}")
+            gdf_boundary.boundary.plot(ax=ax, color="black", linewidth=1.2, label="Glacier Boundary")
+        
+    # Plot MCoRDS 2017 baseline track in light grey
+    ax.scatter(df_17['LON'], df_17['LAT'], color='grey', s=1, alpha=0.3, label="MCoRDS 2017 Baseline")
+    
+    # Plot ICESat-2 tracks colored by year
+    colors = {2019: 'blue', 2021: 'green', 2023: 'red', 2025: 'purple'}
+    for yr in sorted(is2_data_by_year.keys()):
+        df_yr = is2_data_by_year[yr]
+        ax.scatter(df_yr['LON'], df_yr['LAT'], color=colors.get(yr, 'black'), s=2, alpha=0.7, label=f"ICESat-2 {yr}")
+        
+    ax.set_title("Penny Ice Cap: ICESat-2 Satellite Laser Altimetry Tracks\nand co-located MCoRDS Flight Lines", fontsize=11, fontweight="bold")
+    ax.set_xlabel("Longitude (deg W)", fontsize=9)
+    ax.set_ylabel("Latitude (deg N)", fontsize=9)
+    ax.legend(loc="upper left", markerscale=5, fontsize=8)
+    ax.grid(True, linestyle="--", alpha=0.5)
+    
+    map_path = os.path.join(BASE_DIR, "icesat2_tracks_map.png")
+    fig.savefig(map_path, dpi=120, bbox_inches="tight")
+    plt.close(fig)
+    print(f"Saved ICESat-2 tracks map to: {map_path}")
+
+
 def run_icesat2_analysis():
     print("=== Starting ICESat-2 Laser Altimetry Analysis over Penny Ice Cap ===")
     
@@ -125,6 +162,12 @@ def run_icesat2_analysis():
     for yr in list(is2_data_by_year.keys()):
         is2_data_by_year[yr] = pd.concat(is2_data_by_year[yr], ignore_index=True)
         print(f"Year {yr}: Extracted {len(is2_data_by_year[yr])} high-quality track points within bounding box.")
+        
+    # Generate Map of ICESat-2 tracks
+    try:
+        generate_icesat2_track_map(is2_data_by_year, df_17)
+    except Exception as e:
+        print(f"Error generating ICESat-2 track map: {e}")
         
     # Co-locate ICESat-2 tracks with 2017 MCoRDS tracks (100m search radius)
     print("\n--- Co-locating ICESat-2 profiles with 2017 MCoRDS baseline ---")

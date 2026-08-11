@@ -120,12 +120,15 @@ Under the Shallow Ice Approximation (SIA) flow model, incorporating this soft ba
 *Fig. 4. Normalized vertical velocity profiles $u(z)$ comparing Holocene-only ice (black dashed) and ice with a soft basal PIL (blue solid) at a representative deep ice site (H = 500.8 m, Hp = 60.1 m).*
 
 ### 3.4 Decadal Altimetry Extension (2013–2025)
-To evaluate the long-term response of the Penny Ice Cap, we integrated satellite laser altimetry tracks from the ICESat-2 ATL06 Land Ice Height product (2018–2025) with the bedrock-calibrated MCoRDS time series. Using KDTree co-location, we identified matching tracks within a $100$-meter radius of the 2017 MCoRDS tracks.
+To evaluate the long-term response of the Penny Ice Cap, we integrated satellite laser altimetry tracks from the ICESat-2 ATL06 Land Ice Height product (2018–2025) with the bedrock-calibrated MCoRDS time series. Across the Penny Ice Cap, we extracted a total of **158,768** high-quality ICESat-2 track points, distributed across multiple years: **56,351** points in 2019, **57,153** points in 2021, and **45,264** points in 2023 (Fig. 5). Using KDTree co-location with a $100$-meter search radius relative to the 2017 MCoRDS tracks, we identified a total of **1,732** overlapping points: **917** in 2019, **752** in 2021, and **63** in 2023.
 
-We identified a systematic vertical geodetic offset of **$+28.435$ m** between the ICESat-2 (WGS84 ellipsoidal height) and the 2017 MCoRDS baseline (which incorporates local geoid corrections). Aligning the datasets to a unified reference datum yields a continuous 12-year surface elevation change record (Fig. 5).
+![ICESat-2 Tracks Map](icesat2_tracks_map.png)
+*Fig. 5. Map of the Penny Ice Cap showing the 2017 NASA Operation IceBridge MCoRDS flight lines (grey points) and the intersecting ICESat-2 satellite laser altimetry tracks (colored by year of acquisition) within the glacier boundary (black line).*
+
+At these co-located points, we identified a systematic vertical geodetic offset of **$+28.435$ m** in 2019 between the ICESat-2 (WGS84 ellipsoidal height) and the 2017 MCoRDS baseline (which incorporates local geoid corrections). Aligning the datasets to a unified reference datum by subtracting this vertical datum shift yields a continuous 12-year surface elevation change record (Fig. 6).
 
 ![12-Year Altimetry Trend](icesat2_12year_trend.png)
-*Fig. 5. Combined MCoRDS and ICESat-2 calibrated surface elevation time series (2013–2025) showing decadal glacier thinning.*
+*Fig. 6. Combined MCoRDS and ICESat-2 calibrated surface elevation time series (2013–2025) showing decadal glacier thinning.*
 
 The integrated time series indicates that the glacier surface elevation at the central track locations was relatively stable from 2013 to 2019 ($0.0$ m relative to 2017), followed by moderate thinning of **$-1.379$ m** by 2021, and a sharp acceleration to **$-13.790$ m** by 2023. Linear regression yields an overall decadal thinning rate of **$-1.28$ m a$^{-1}$**.
 
@@ -144,13 +147,13 @@ The standard deviation of the elevation differences is **$13.141$ m**, demonstra
 | Root Mean Squared Error (RMSE) | $29.918$ m |
 
 ![ATM Validation Histogram](atm_validation_histogram.png)
-*Fig. 6. Distribution of elevation differences between ATM L2 and MCoRDS L2 surface elevations over the Penny Ice Cap in 2017.*
+*Fig. 7. Distribution of elevation differences between ATM L2 and MCoRDS L2 surface elevations over the Penny Ice Cap in 2017.*
 
 ![ATM Validation Map](atm_validation_map.png)
-*Fig. 7. Spatial distribution of elevation differences ($z_{atm} - z_{mcoords}$) along overlapping tracks in 2017.*
+*Fig. 8. Spatial distribution of elevation differences ($z_{atm} - z_{mcoords}$) along overlapping tracks in 2017.*
 
 ![ATM Thickness Map](atm_validation_thickness.png)
-*Fig. 8. MCoRDS ice thickness mapped along the overlapping ATM track locations in 2017.*
+*Fig. 9. MCoRDS ice thickness mapped along the overlapping ATM track locations in 2017.*
 
 ---
 
