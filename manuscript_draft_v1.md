@@ -109,20 +109,23 @@ This residual thinning rate suggests that the ArcticDEM stereo-imagery used to c
 *Fig. 2. Penny Ice Cap surface and bed topography: (a) Map of Penny Ice Cap surface elevation from the 2015–2016 DEM, showing the glacier boundary (black); (b) 2017 NASA IceBridge MCoRDS airborne radar measurement tracks (orange dashed lines) and interpolated bedrock topography.*
 
 ### 3.3 Basal shear velocity profile
-The SIA flow model shows that the inclusion of a soft basal Pleistocene Ice Layer ($E=3.5$) concentrates shear strain in the lower 12% of the ice column. 
+To assess the influence of rheological stratigraphy on the flow dynamics of the Penny Ice Cap, we modeled the spatial distribution of a soft basal Pleistocene Ice Layer (PIL). Out of 110,109 surveyed radar track points, the PIL (defined where ice thickness exceeds $150$ m) is estimated to be present along **36.81%** of the flight lines (Fig. 3). Where present, the estimated PIL thickness has a mean of **$44.36$ m**, reaching its predefined maximum thickness cap of **$80.00$ m** in the deep central trenches of the ice cap, where the total ice thickness reaches up to **$883.64$ m**. The PIL is absent in the thinner ice regions ($<150$ m) along the margins and lower reaches of the outlet glaciers.
+
+![PIL Distribution Map](pil_distribution_map.png)
+*Fig. 3. Spatial distribution of the estimated Pleistocene Ice Layer (PIL) thickness along the 2017 MCoRDS radar sounding tracks.*
+
+Under the Shallow Ice Approximation (SIA) flow model, incorporating this soft basal layer ($E=3.5$) significantly alters the vertical velocity profile (Fig. 4). At a representative deep ice site ($H = 500.8$ m, $H_p = 60.1$ m), the inclusion of the PIL concentrates shear strain in the lower 12% of the ice column. Due to the enhanced fluidity of the PIL, the surface velocity increases significantly compared to uniform Holocene ice under identical slope and thickness conditions, demonstrating the critical role of basal ice stratigraphy in modulating the ice cap's dynamic response to climatic forcing.
 
 ![PIL Profile](pil_velocity_profile.png)
-*Fig. 3. Normalized vertical velocity profiles $u(z)$ comparing Holocene-only ice (blue) and ice with a soft basal PIL (red).*
-
-Due to the enhanced fluidity of the PIL, the surface velocity increases significantly compared to uniform Holocene ice under identical slope and thickness conditions, demonstrating the importance of accounting for basal stratigraphy in glacier flow models.
+*Fig. 4. Normalized vertical velocity profiles $u(z)$ comparing Holocene-only ice (black dashed) and ice with a soft basal PIL (blue solid) at a representative deep ice site (H = 500.8 m, Hp = 60.1 m).*
 
 ### 3.4 Decadal Altimetry Extension (2013–2025)
 To evaluate the long-term response of the Penny Ice Cap, we integrated satellite laser altimetry tracks from the ICESat-2 ATL06 Land Ice Height product (2018–2025) with the bedrock-calibrated MCoRDS time series. Using KDTree co-location, we identified matching tracks within a $100$-meter radius of the 2017 MCoRDS tracks.
 
-We identified a systematic vertical geodetic offset of **$+28.435$ m** between the ICESat-2 (WGS84 ellipsoidal height) and the 2017 MCoRDS baseline (which incorporates local geoid corrections). Aligning the datasets to a unified reference datum yields a continuous 12-year surface elevation change record (Fig. 4).
+We identified a systematic vertical geodetic offset of **$+28.435$ m** between the ICESat-2 (WGS84 ellipsoidal height) and the 2017 MCoRDS baseline (which incorporates local geoid corrections). Aligning the datasets to a unified reference datum yields a continuous 12-year surface elevation change record (Fig. 5).
 
 ![12-Year Altimetry Trend](icesat2_12year_trend.png)
-*Fig. 4. Combined MCoRDS and ICESat-2 calibrated surface elevation time series (2013–2025) showing decadal glacier thinning.*
+*Fig. 5. Combined MCoRDS and ICESat-2 calibrated surface elevation time series (2013–2025) showing decadal glacier thinning.*
 
 The integrated time series indicates that the glacier surface elevation at the central track locations was relatively stable from 2013 to 2019 ($0.0$ m relative to 2017), followed by moderate thinning of **$-1.379$ m** by 2021, and a sharp acceleration to **$-13.790$ m** by 2023. Linear regression yields an overall decadal thinning rate of **$-1.28$ m a$^{-1}$**.
 
@@ -141,13 +144,13 @@ The standard deviation of the elevation differences is **$13.141$ m**, demonstra
 | Root Mean Squared Error (RMSE) | $29.918$ m |
 
 ![ATM Validation Histogram](atm_validation_histogram.png)
-*Fig. 5. Distribution of elevation differences between ATM L2 and MCoRDS L2 surface elevations over the Penny Ice Cap in 2017.*
+*Fig. 6. Distribution of elevation differences between ATM L2 and MCoRDS L2 surface elevations over the Penny Ice Cap in 2017.*
 
 ![ATM Validation Map](atm_validation_map.png)
-*Fig. 6. Spatial distribution of elevation differences ($z_{atm} - z_{mcoords}$) along overlapping tracks in 2017.*
+*Fig. 7. Spatial distribution of elevation differences ($z_{atm} - z_{mcoords}$) along overlapping tracks in 2017.*
 
 ![ATM Thickness Map](atm_validation_thickness.png)
-*Fig. 7. MCoRDS ice thickness mapped along the overlapping ATM track locations in 2017.*
+*Fig. 8. MCoRDS ice thickness mapped along the overlapping ATM track locations in 2017.*
 
 ---
 
