@@ -119,18 +119,18 @@ Under the Shallow Ice Approximation (SIA) flow model, incorporating this soft ba
 ![PIL Profile](pil_velocity_profile.png)
 *Fig. 4. Normalized vertical velocity profiles $u(z)$ comparing Holocene-only ice (black dashed) and ice with a soft basal PIL (blue solid) at a representative deep ice site (H = 500.8 m, Hp = 60.1 m).*
 
-### 3.4 Altimetry Extension (2013–2021)
-To evaluate the long-term response of the Penny Ice Cap, we integrated satellite laser altimetry tracks from the ICESat-2 ATL06 Land Ice Height product (2018–2021) with the bedrock-calibrated MCoRDS time series. Strictly within the glacier boundary, we extracted a total of **65,244** high-quality ICESat-2 track points: **41,135** points in 2019 and **24,109** points in 2021 (Fig. 5). The 2023 track was found to lie entirely outside the glacier boundary and was omitted from the analysis. Using KDTree co-location with a $100$-meter search radius relative to the glacier-filtered 2017 MCoRDS tracks, we identified a total of **1,510** overlapping points: **827** in 2019 and **683** in 2021.
+### 3.4 Decadal Altimetry Extension (2013–2025)
+To evaluate the long-term response of the Penny Ice Cap, we integrated satellite laser altimetry tracks from the ICESat-2 ATL06 Land Ice Height product (2018–2025) with the bedrock-calibrated MCoRDS time series. Across the Penny Ice Cap, we extracted a total of **196,964** high-quality ICESat-2 track points strictly within the glacier boundary, distributed across multiple years: **41,135** points in 2019, **24,109** points in 2021, **24,102** points in 2022, **39,075** points in 2023, **27,612** points in 2024, and **40,834** points in 2025 (Fig. 5). Using KDTree co-location with a $100$-meter search radius relative to the glacier-filtered 2017 MCoRDS tracks, we identified a total of **4,112** overlapping points: **827** in 2019, **683** in 2021, **684** in 2022, **746** in 2023, **351** in 2024, and **817** in 2025.
 
 ![ICESat-2 Tracks Map](icesat2_tracks_map.png)
 *Fig. 5. Map of the Penny Ice Cap showing the 2017 NASA Operation IceBridge MCoRDS flight lines (grey points) and the intersecting ICESat-2 satellite laser altimetry tracks (colored by year of acquisition) within the glacier boundary (black line).*
 
-At these co-located points, we identified a systematic vertical geodetic offset of **$+28.671$ m** in 2019 between the ICESat-2 (WGS84 ellipsoidal height) and the 2017 MCoRDS baseline (which incorporates local geoid corrections). Aligning the datasets to a unified reference datum by subtracting this vertical datum shift yields a continuous 8-year surface elevation change record (Fig. 6).
+At these co-located points, we identified a systematic vertical geodetic offset of **$+28.671$ m** in 2019 between the ICESat-2 (WGS84 ellipsoidal height) and the 2017 MCoRDS baseline (which incorporates local geoid corrections). Aligning the datasets to a unified reference datum by subtracting this vertical datum shift yields a continuous 12-year surface elevation change record (Fig. 6).
 
 ![12-Year Altimetry Trend](icesat2_12year_trend.png)
-*Fig. 6. Combined MCoRDS and ICESat-2 calibrated surface elevation time series (2013–2021) showing glacier thinning.*
+*Fig. 6. Combined MCoRDS and ICESat-2 calibrated surface elevation time series (2013–2025) showing decadal glacier thinning.*
 
-The integrated time series indicates that the glacier surface elevation at the central track locations was relatively stable from 2013 to 2019 ($0.0$ m relative to 2017), followed by thinning of **$-1.712$ m** by 2021. Linear regression yields an overall thinning rate of **$-0.326$ m a$^{-1}$**.*
+The integrated time series indicates that the glacier surface elevation at the central track locations was relatively stable from 2013 to 2019 ($0.0$ m relative to 2017), followed by moderate thinning of **$-1.712$ m** by 2021, **$-2.184$ m** by 2022, **$-2.651$ m** by 2023, **$-2.792$ m** by 2024, and **$-2.735$ m** by 2025. Linear regression yields an overall decadal thinning rate of **$-0.346$ m a$^{-1}$**.*
 
 ### 3.5 MCoRDS vs. ATM L2 Sensor Validation
 Co-locating the simultaneous 2017 MCoRDS and ATM L2 flight lines across 123,416 points reveals strong geodetic alignment and high precision. The median elevation difference is **$+28.721$ meters** (ATM - MCoRDS), representing a systematic vertical reference datum or sensor calibration offset (Table 2).
@@ -160,15 +160,15 @@ The standard deviation of the elevation differences is **$13.141$ m**, demonstra
 ## 4. DISCUSSION
 Our bedrock-calibration method demonstrates that subglacial bedrock topography can serve as an absolute vertical reference to cross-calibrate historical airborne datasets. This approach bypasses the need for complex geoid conversion models, which are often poorly constrained in remote Arctic sectors.
 
-The multi-decadal altimetry integration shows that while the Penny Ice Cap dome was relatively stable in the 2010s (including stable heights between 2017 and 2019), it has experienced thinning of $-1.712$ m by 2021. This thinning trend is temporally consistent with regional reports of summer warming and increased meltwater runoff across Baffin Island. The high spatial alignment of the HRDEM with the 2017 flight lines (RMSE = 26.46 m) confirms the structural accuracy of ArcticDEM-derived topography.
+The multi-decadal altimetry integration shows that while the Penny Ice Cap dome was relatively stable in the early 2010s, it has entered a state of steady thinning after 2019, reaching a change of $-2.735$ m by 2025. This thinning trend is temporally consistent with regional reports of summer warming and increased meltwater runoff across Baffin Island. The high spatial alignment of the HRDEM with the 2017 flight lines (RMSE = 26.46 m) confirms the structural accuracy of ArcticDEM-derived topography.
 
 ---
 
 ## 5. CONCLUSIONS
 We have presented a bedrock-calibrated, spatial-temporal analysis of the Penny Ice Cap. Our key conclusions are:
 1. Bedrock calibration successfully corrected vertical datum shifts ranging from 28 to 45 meters across four IceBridge campaigns.
-2. Integrating ICESat-2 laser altimetry established a continuous 8-year (2013–2021) surface elevation time series, revealing an overall thinning rate of **$-0.326$ m a$-1$** in the central sector.
-3. The Penny Ice Cap dome remained relatively stable until 2019, followed by a surface lowering of **$-1.712$ m** by 2021.
+2. Integrating ICESat-2 laser altimetry established a continuous 12-year (2013–2025) surface elevation time series, revealing an overall thinning rate of **$-0.346$ m a$^{-1}$** in the central sector.
+3. The Penny Ice Cap dome has experienced a steady surface lowering after 2019, reaching a median change of **$-2.735$ m** by 2025.
 4. The Canadian HRDEM contains a $+21.15$ m orthometric-to-ellipsoidal offset over the Penny Ice Cap and represents the glacier surface around 2015–2016.
 5. Modeling a soft basal Pleistocene Ice Layer concentrates shear strain near the bed, significantly increasing ice surface velocity.
 6. Co-location with simultaneous IceBridge ATM L2 laser altimetry validated the 2017 MCoRDS surface elevations, identifying a systematic $+28.721$ m vertical datum offset (std dev $13.141$ m).
