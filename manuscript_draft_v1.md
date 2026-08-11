@@ -87,11 +87,11 @@ The Python source code, GIS tools, bedrock-calibration algorithm, PIL modeling, 
 The bedrock-calibration algorithm identified significant systematic offsets relative to the 2017 baseline (Table 1).
 
 **Table 1. Calculated Vertical Datum Offsets and Calibrated Glaciological Changes**
-| Year | Co-Located Bedrock Points ($N$) | Mean Bedrock Offset (m) | Median Calibrated $\Delta z_{surf}$ (m) | Median $\Delta H$ (m) |
-|:---:|:---:|:---:|:---:|:---:|
-| 2013 | 22,675 | $-34.733$ | $-1.178$ | $-1.490$ |
-| 2014 | 45,874 | $-28.843$ | $-26.519$ | $-2.830$ |
-| 2015 | 29,177 | $-45.838$ | $-30.622$ | $+3.000$ |
+| Year | Co-Located Bedrock Points ($N$) | Mean Bedrock Offset (m) | Pearson $r$ | Uncalibrated RMSE (m) | Calibrated RMSE (m) | Median Calibrated $\Delta z_{surf}$ (m) | Median $\Delta H$ (m) |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| 2013 | 22,675 | $-34.733$ | $0.998$ | $38.978$ | $17.688$ | $-1.178$ | $-1.490$ |
+| 2014 | 45,874 | $-28.843$ | $0.994$ | $46.799$ | $36.854$ | $-26.519$ | $-2.830$ |
+| 2015 | 29,177 | $-45.838$ | $0.989$ | $62.706$ | $42.789$ | $-30.622$ | $+3.000$ |
 
 The median surface change between 2013 and 2017 at overlapping tracks is **$-1.178$ m**, corresponding to an annual thinning rate of **$-0.294$ m a$^{-1}$**. During the same period, the median thickness change was **$-1.490$ m**, demonstrating high consistency between the independent altimetry and thickness measurements (Fig. 1).
 

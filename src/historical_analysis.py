@@ -88,6 +88,9 @@ def run_historical_analysis():
     # Calculate geodetic datum corrections based on the static bedrock elevation at overlapping points (within 100m)
     # We define 2017 as the reference datum (Correction = 0.0)
     corrections = {2017: 0.0}
+    pearson_r_dict = {}
+    rmse_uncal_dict = {}
+    rmse_cal_dict = {}
     
     print("\n--- Performing Bedrock Calibration ---")
     for yr in [2013, 2014, 2015]:
@@ -108,12 +111,30 @@ def run_historical_analysis():
         
         if valid_mask.sum() > 0:
             # Bedrock difference: z_bed_17 - z_bed_yr
-            bed_diff = corr_17.loc[valid_mask, 'z_bed'].to_numpy() - overlap.loc[valid_mask, 'z_bed'].to_numpy()
+            bed_yr = overlap.loc[valid_mask, 'z_bed'].to_numpy()
+            bed_17 = corr_17.loc[valid_mask, 'z_bed'].to_numpy()
+            bed_diff = bed_17 - bed_yr
             mean_offset = float(np.mean(bed_diff))
             corrections[yr] = mean_offset
+            
+            # Pearson correlation coefficient (r)
+            r_val = float(np.corrcoef(bed_yr, bed_17)[0, 1])
+            pearson_r_dict[yr] = r_val
+            
+            # RMSE calculations
+            rmse_uncal = float(np.sqrt(np.mean(bed_diff ** 2)))
+            rmse_uncal_dict[yr] = rmse_uncal
+            
+            rmse_cal = float(np.sqrt(np.mean((bed_17 - (bed_yr + mean_offset)) ** 2)))
+            rmse_cal_dict[yr] = rmse_cal
+            
             print(f"Year {yr}: Found {valid_mask.sum()} co-located bedrock points. Mean vertical offset = {mean_offset:.3f} m")
+            print(f"  Pearson r = {r_val:.5f}, Uncalibrated RMSE = {rmse_uncal:.3f} m, Calibrated RMSE = {rmse_cal:.3f} m")
         else:
             corrections[yr] = 0.0
+            pearson_r_dict[yr] = 0.0
+            rmse_uncal_dict[yr] = 0.0
+            rmse_cal_dict[yr] = 0.0
             print(f"Year {yr}: No co-located bedrock points found. Setting vertical offset to 0.0 m")
             
     # Apply vertical datum corrections to raw surface elevations
@@ -179,9 +200,9 @@ Comparison Period: 2013 to 2017 (4 years)
 Total Gridded Cells Examined (2km buffer): {len(valid_dz)}
 
 Geodetic Vertical Datum Corrections Applied (aligned to 2017 baseline):
-  - 2013 correction: {corrections[2013]:+.3f} meters
-  - 2014 correction: {corrections[2014]:+.3f} meters
-  - 2015 correction: {corrections[2015]:+.3f} meters
+  - 2013 correction: {corrections[2013]:+.3f} meters (Pearson r: {pearson_r_dict[2013]:.5f}, Uncalibrated RMSE: {rmse_uncal_dict[2013]:.3f} m, Calibrated RMSE: {rmse_cal_dict[2013]:.3f} m)
+  - 2014 correction: {corrections[2014]:+.3f} meters (Pearson r: {pearson_r_dict[2014]:.5f}, Uncalibrated RMSE: {rmse_uncal_dict[2014]:.3f} m, Calibrated RMSE: {rmse_cal_dict[2014]:.3f} m)
+  - 2015 correction: {corrections[2015]:+.3f} meters (Pearson r: {pearson_r_dict[2015]:.5f}, Uncalibrated RMSE: {rmse_uncal_dict[2015]:.3f} m, Calibrated RMSE: {rmse_cal_dict[2015]:.3f} m)
   - 2017 correction: {corrections[2017]:+.3f} meters
 
 Calibrated Surface Elevation Change (z_2017 - z_2013):
