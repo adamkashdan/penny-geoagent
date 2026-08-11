@@ -311,7 +311,7 @@ def run_icesat2_analysis():
     slope, intercept = np.polyfit(years_plot, surf_plot, 1)
     ax.plot(years_plot, slope * years_plot + intercept, color='darkorange', linestyle=':', linewidth=1.5, label=f"Trend ({slope:+.3f} m/yr)")
     
-    ax.set_title("Penny Ice Cap: Surface Elevation Change (2013-2021)\n(Combined MCoRDS & ICESat-2 Altimetry)", fontsize=10, fontweight="bold")
+    ax.set_title("Penny Ice Cap: Surface Elevation Change (2013-2025)\n(Combined MCoRDS & ICESat-2 Altimetry)", fontsize=10, fontweight="bold")
     ax.set_xlabel("Year", fontsize=9)
     ax.set_ylabel("Elevation Change (meters relative to 2017)", fontsize=9)
     ax.set_xticks(sorted(all_years))
