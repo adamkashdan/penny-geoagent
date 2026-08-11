@@ -35,11 +35,12 @@ In recent decades, sustained atmospheric warming has driven substantial changes 
 ## 2. DATA AND METHODS
 
 ### 2.1 Datasets
-We utilize four primary datasets:
+We utilize five primary datasets:
 1. **MCoRDS L2 Ice Thickness (IRMCR2)**: Level 2 radar profiles containing latitude, longitude, UTC time, aircraft GPS elevation ($ELEVATION$), radar range to surface ($SURFACE$), and calculated ice thickness ($THICK$) for the 2013, 2014, 2015, and 2017 campaigns.
-2. **NRCan High Resolution Digital Elevation Model (HRDEM)**: Compiled under the CanElevation project, utilizing the CGVD2013 vertical datum (orthometric heights) at 10 m resolution.
-3. **Sentinel-2 Multi-spectral Imagery**: Used to verify surface features, snow lines, and glacier outlines.
-4. **IceBridge ATM L2 Icessn Elevation (ILATM2)**: High-resolution surface elevation measurements collected on the same flight campaign using the Airborne Topographic Mapper (ATM) laser scanner.
+2. **ICESat-2 ATL06 Land Ice Height**: Level 3A land ice elevations containing geolocated heights, acquisition times, and track geometries from the ATLAS instrument (2019–2025 campaigns).
+3. **NRCan High Resolution Digital Elevation Model (HRDEM)**: Compiled under the CanElevation project, utilizing the CGVD2013 vertical datum (orthometric heights) at 10 m resolution.
+4. **Sentinel-2 Multi-spectral Imagery**: Used to verify surface features, snow lines, and glacier outlines.
+5. **IceBridge ATM L2 Icessn Elevation (ILATM2)**: High-resolution surface elevation measurements collected on the same flight campaign using the Airborne Topographic Mapper (ATM) laser scanner.
 
 ### 2.2 Bedrock calibration method
 To correct for geodetic vertical datum offsets between different campaign years, we define the 2017 MCoRDS campaign as the baseline. For each older campaign ($yr \in \{2013, 2014, 2015\}$), we find all points that are co-located within 100 meters of a 2017 track point using a $k$-dimensional tree (`cKDTree`).
