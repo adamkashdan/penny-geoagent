@@ -10,6 +10,7 @@ import h5py
 import numpy as np
 import pandas as pd
 import geopandas as gpd
+from shapely.geometry import Point
 from rasterio.warp import transform
 from scipy.spatial import cKDTree
 import matplotlib
@@ -138,6 +139,15 @@ def run_icesat2_analysis():
     print("Loading 2017 MCoRDS baseline track...")
     df_17 = load_mcords_2017()
     
+    # Filter 2017 MCoRDS to glacier boundary
+    print("Filtering 2017 MCoRDS baseline to glacier boundary...")
+    gdf_boundary = gpd.read_file(SHP_PATH) if os.path.exists(SHP_PATH) else None
+    if gdf_boundary is not None:
+        gdf_boundary_wgs84 = gdf_boundary.to_crs("EPSG:4326")
+        gdf_17 = gpd.GeoDataFrame(df_17, geometry=[Point(xy) for xy in zip(df_17['LON'], df_17['LAT'])], crs='EPSG:4326')
+        df_17 = gpd.sjoin(gdf_17, gdf_boundary_wgs84, how='inner', predicate='within').copy()
+        df_17 = df_17.drop(columns=['index_right'], errors='ignore')
+    
     # Project 2017 to Albers (ESRI:102008) for distance metrics
     xs_17, ys_17 = transform('EPSG:4326', 'ESRI:102008', df_17['LON'].tolist(), df_17['LAT'].tolist())
     df_17['x_proj'] = xs_17
@@ -158,11 +168,24 @@ def run_icesat2_analysis():
                 is2_data_by_year[yr] = []
             is2_data_by_year[yr].append(df_is2)
             
-    # Combine entries per year
+    # Combine and filter entries per year strictly to the glacier boundary
+    print("Filtering ICESat-2 tracks to glacier boundary...")
     for yr in list(is2_data_by_year.keys()):
-        is2_data_by_year[yr] = pd.concat(is2_data_by_year[yr], ignore_index=True)
-        print(f"Year {yr}: Extracted {len(is2_data_by_year[yr])} high-quality track points within bounding box.")
-        
+        df_combined = pd.concat(is2_data_by_year[yr], ignore_index=True)
+        if gdf_boundary is not None:
+            gdf_yr = gpd.GeoDataFrame(df_combined, geometry=[Point(xy) for xy in zip(df_combined['LON'], df_combined['LAT'])], crs='EPSG:4326')
+            df_filtered = gpd.sjoin(gdf_yr, gdf_boundary_wgs84, how='inner', predicate='within').copy()
+            df_filtered = df_filtered.drop(columns=['index_right'], errors='ignore')
+            if not df_filtered.empty:
+                is2_data_by_year[yr] = df_filtered
+                print(f"Year {yr}: Extracted {len(df_filtered)} high-quality track points strictly within glacier boundary.")
+            else:
+                del is2_data_by_year[yr]
+                print(f"Year {yr}: No points within glacier boundary. Omitted from analysis.")
+        else:
+            is2_data_by_year[yr] = df_combined
+            print(f"Year {yr}: Extracted {len(df_combined)} high-quality track points (unfiltered, missing shapefile).")
+            
     # Generate Map of ICESat-2 tracks
     try:
         generate_icesat2_track_map(is2_data_by_year, df_17)
@@ -257,17 +280,23 @@ def run_icesat2_analysis():
     relative_surf = [1.490, 2.830, -3.000, 0.0]
     
     # We calibrate ICESat-2 data to the 2017 baseline by subtracting the
-    # vertical datum shift of +28.435 meters found at co-located points
+    # vertical datum shift found at co-located points in 2019
+    offset_2019 = 28.671
+    for r in results:
+        if r['year'] == 2019:
+            offset_2019 = r['median_dz']
+            break
+            
     for r in results:
         all_years.append(r['year'])
-        calibrated_dz = r['median_dz'] - 28.435
+        calibrated_dz = r['median_dz'] - offset_2019
         relative_surf.append(calibrated_dz)
         
-    print("\n=== Combined Calibrated 2013-2025 Elevation Change Time Series ===")
+    print("\n=== Combined Calibrated Elevation Change Time Series ===")
     for y, v in zip(all_years, relative_surf):
         print(f"  Year {y}: {v:+.3f} meters (relative to 2017 baseline)")
         
-    # Plot the 12-year time series!
+    # Plot the time series!
     fig, ax = plt.subplots(figsize=(6, 5))
     
     # Sort by year
@@ -282,7 +311,7 @@ def run_icesat2_analysis():
     slope, intercept = np.polyfit(years_plot, surf_plot, 1)
     ax.plot(years_plot, slope * years_plot + intercept, color='darkorange', linestyle=':', linewidth=1.5, label=f"Trend ({slope:+.3f} m/yr)")
     
-    ax.set_title("Penny Ice Cap: 12-Year Surface Elevation Change (2013-2025)\n(Combined MCoRDS & ICESat-2 Altimetry)", fontsize=10, fontweight="bold")
+    ax.set_title("Penny Ice Cap: Surface Elevation Change (2013-2021)\n(Combined MCoRDS & ICESat-2 Altimetry)", fontsize=10, fontweight="bold")
     ax.set_xlabel("Year", fontsize=9)
     ax.set_ylabel("Elevation Change (meters relative to 2017)", fontsize=9)
     ax.set_xticks(sorted(all_years))
@@ -292,7 +321,7 @@ def run_icesat2_analysis():
     trend_12yr_path = os.path.join(BASE_DIR, "icesat2_12year_trend.png")
     fig.savefig(trend_12yr_path, dpi=120, bbox_inches="tight")
     plt.close(fig)
-    print(f"\nSaved 12-year trend plot to: {trend_12yr_path}")
+    print(f"\nSaved trend plot to: {trend_12yr_path}")
 
 
 if __name__ == "__main__":
